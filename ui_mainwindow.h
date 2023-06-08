@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
@@ -42,6 +43,8 @@ public:
     QPushButton *polygonButton;
     QPushButton *pencilButton;
     QListWidget *listWidget;
+    QFrame *line;
+    QFrame *line_2;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -52,7 +55,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1041, 599);
+        MainWindow->resize(1039, 643);
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName("actionOpen");
         QIcon icon;
@@ -87,7 +90,7 @@ public:
         centralwidget->setObjectName("centralwidget");
         openGLWidget = new GLWidget(centralwidget);
         openGLWidget->setObjectName("openGLWidget");
-        openGLWidget->setGeometry(QRect(320, 10, 711, 541));
+        openGLWidget->setGeometry(QRect(313, 78, 711, 511));
         openGLWidget->setMinimumSize(QSize(0, 0));
         lineButton = new QPushButton(centralwidget);
         lineButton->setObjectName("lineButton");
@@ -127,11 +130,21 @@ public:
         pencilButton->setIcon(icon11);
         listWidget = new QListWidget(centralwidget);
         listWidget->setObjectName("listWidget");
-        listWidget->setGeometry(QRect(20, 70, 281, 371));
+        listWidget->setGeometry(QRect(13, 78, 271, 511));
+        line = new QFrame(centralwidget);
+        line->setObjectName("line");
+        line->setGeometry(QRect(17, 60, 1001, 16));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+        line_2 = new QFrame(centralwidget);
+        line_2->setObjectName("line_2");
+        line_2->setGeometry(QRect(286, 82, 20, 501));
+        line_2->setFrameShape(QFrame::VLine);
+        line_2->setFrameShadow(QFrame::Sunken);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1041, 26));
+        menubar->setGeometry(QRect(0, 0, 1039, 22));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName("menuFile");
         menuEdit = new QMenu(menubar);

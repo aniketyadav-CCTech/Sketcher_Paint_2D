@@ -8,7 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);    
+    ui->setupUi(this);   
+    connect(ui->circlebutton, &QPushButton::clicked, this, &MainWindow::on_lineButton_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -18,10 +19,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_lineButton_clicked()
 {
-    LineInputDialog lineInputDialog;
-    lineInputDialog.exec();
-    Line* line = lineInputDialog.getLine();
-    ;
-    delete line;
+    lineInputDialog = new LineInputDialog();
+    lineInputDialog->setWindowTitle("Line Input");
+    lineInputDialog->exec();
+    Line* line = lineInputDialog->getLine();
+    sketches.push_back(line);
+    ui->openGLWidget->setGeom(line);
+    ui->openGLWidget->paintGL();
+    ui->openGLWidget->update();
 }
-

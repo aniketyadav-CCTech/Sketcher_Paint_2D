@@ -21,6 +21,8 @@ private slots:
 	void on_lineButton_clicked();
 
 private:
+	std::vector<IGeometry*> sketches;
+	LineInputDialog* lineInputDialog;
 	Ui::MainWindow* ui;
 };
 #endif // MAINWINDOW_H

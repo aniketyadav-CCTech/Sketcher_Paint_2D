@@ -9,6 +9,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include "Line.h"
 
 #define PI 3.141592653
 
@@ -22,12 +23,16 @@ public:
 	void initializeGL() override;
 	void paintGL() override;
 	void render();
-
+	void setGeom(Line* geometry);
+	void setShapeColor();
 public slots:
 	void toggleLineDrawing(bool enabled);
 
 private:
+	Line* mGeometry;
+	QColor m_shapeColor;
 	bool drawLine;
+
 	float x_offset, y_offset, z_offset;
 	//Vector for holding coordinates
 	std::vector<GLfloat> vertices;

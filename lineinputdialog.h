@@ -19,8 +19,8 @@ public:
     Line* getLine();
 
 private slots:
-
     void on_buttonBox_accepted();
+
 private:
     Ui::LineInputDialog *ui;
     Line* line;

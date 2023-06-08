@@ -1,4 +1,5 @@
 #include "Line.h"
+#include "Line.h"
 #include <sstream>
 
 Line::Line():IGeometry("Line")
@@ -43,4 +44,14 @@ std::string Line::toString()
 
 void Line::generateLine()
 {
+}
+
+Point Line::getEndpoint()
+{
+	return endpoint1;
+}
+
+Point Line::getStartpoint()
+{
+	return endpoint2;
 }
