@@ -17,17 +17,6 @@ public:
 	MainWindow(QWidget* parent = nullptr);
 	~MainWindow();
 
-	//void initializeGL();
-	//void resizeGL(int w, int h);
-	//void paintGL();
-	//void resizeEvent(QResizeEvent* revent);
-	//void paintEvent(QPaintEvent* pevent);
-
-private:
-	GLWidget* openGLWidget;
-	QPushButton* button;
-
-
 private slots:
 	void on_lineButton_clicked();
 

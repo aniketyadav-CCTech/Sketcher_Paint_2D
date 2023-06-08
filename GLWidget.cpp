@@ -22,7 +22,7 @@ GLWidget::GLWidget(float in_x_offset, float in_y_offset, float in_z_offset)
         {
             colors.push_back(1.0f);
         }
-        vertices.push_back((i / function_domain) + x_offset);     //X component
+        vertices.push_back((static_cast<float>(i) / static_cast<float>(function_domain)) + x_offset);     //X component
         vertices.push_back((sin((i * PI) / 180) / 2) + y_offset);	//Y component
         vertices.push_back(z_offset);                             //Z component
     }
@@ -45,19 +45,31 @@ void GLWidget::initializeGL()
     m_matrixUniform = m_program->uniformLocation("matrix");*/
 }
 
+//void GLWidget::paintGL()
+//{
+//    glClear(GL_COLOR_BUFFER_BIT);
+//
+//    if (drawLine) {
+//        glColor3f(1.0f, 1.0f, 1.0f);
+//        glBegin(GL_LINES);
+//        glVertex2f(-0.5f, -0.5f);
+//        glVertex2f(0.5f, 0.5f);
+//        glEnd();
+//    }
+//}
 void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    if (drawLine) {
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glBegin(GL_LINES);
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f(0.5f, 0.5f);
-        glEnd();
-    }
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex2f(-0.5f, -0.5f);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2f(0.5f, -0.5f);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex2f(0.0f, 0.5f);
+    glEnd();
 }
-
 void GLWidget::toggleLineDrawing(bool enabled)
 {
     drawLine = enabled;

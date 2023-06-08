@@ -36,8 +36,8 @@ void LineInputDialog::on_buttonBox_accepted()
 		line = l;
 		l = nullptr;
 	}
-	catch (int exc) {
-		QMessageBox::warning(this, "Incorrect details", "Plaese try again with correct co-ordinates");
+	catch (char* e) {
+		QMessageBox::warning(this, "Incorrect details", "Plaese try again with correct co-ordinates :"+ *e);
 	}
 }
 

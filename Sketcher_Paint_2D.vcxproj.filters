@@ -136,7 +136,5 @@
     <None Include="Resources\icons\undo.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="shaders\basic.frag" />
-    <None Include="shaders\basic.vert" />
   </ItemGroup>
 </Project>

@@ -9,10 +9,10 @@
 #ifndef UI_MAINWINDOW_H
 #define UI_MAINWINDOW_H
 
+#include <GLWidget.h>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QIcon>
-#include <QtOpenGLWidgets/QOpenGLWidget>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
@@ -34,7 +34,7 @@ public:
     QAction *actionRedo;
     QAction *actionView_Help;
     QWidget *centralwidget;
-    QOpenGLWidget *openGLWidget;
+    GLWidget *openGLWidget;
     QPushButton *lineButton;
     QPushButton *rectangleButton;
     QPushButton *circlebutton;
@@ -85,7 +85,7 @@ public:
         actionView_Help->setIcon(icon5);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        openGLWidget = new QOpenGLWidget(centralwidget);
+        openGLWidget = new GLWidget(centralwidget);
         openGLWidget->setObjectName("openGLWidget");
         openGLWidget->setGeometry(QRect(320, 10, 711, 541));
         openGLWidget->setMinimumSize(QSize(0, 0));
