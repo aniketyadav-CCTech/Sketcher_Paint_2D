@@ -22,7 +22,7 @@ void MainWindow::on_lineButton_clicked()
     lineInputDialog = new LineInputDialog();
     lineInputDialog->setWindowTitle("Line Input");
     lineInputDialog->exec();
-    Line* line = lineInputDialog->getLine();
+    IGeometry* line = lineInputDialog->getLine();
     sketches.push_back(line);
     ui->openGLWidget->setGeom(line);
     ui->openGLWidget->paintGL();

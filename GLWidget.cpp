@@ -3,7 +3,7 @@
 #include <QScreen>
 
 GLWidget::GLWidget(QWidget* parent)
-	: QOpenGLWidget(parent), drawLine(false), mGeometry(nullptr)
+	: QOpenGLWidget(parent), drawLine(false)
 {
 }
 
@@ -37,15 +37,20 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
-	if (mGeometry != nullptr) {
-		glBegin(GL_LINES);
-		//glColor3f(1.0f, 0.0f, 0.0f);
-		glColor3f(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
-		Point s = mGeometry->getStartpoint();
-		glVertex2f(s.getX(), s.getY());
-		Point e = mGeometry->getEndpoint();
-		glVertex2f(e.getX(), e.getY());
-		glEnd();
+	if (!mGeometry.empty()) {
+		for(auto geom:mGeometry)
+		if (geom->name == "Line")
+		{
+			Line* line = dynamic_cast<Line*>(geom);
+			glBegin(GL_LINES);
+			//glColor3f(1.0f, 0.0f, 0.0f);
+			glColor3f(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
+			Point s = line->getStartpoint();
+			glVertex2f(s.getX(), s.getY());
+			Point e = line->getEndpoint();
+			glVertex2f(e.getX(), e.getY());
+			glEnd();
+		}
 		
 	}
 	//else
@@ -112,9 +117,9 @@ void GLWidget::render()
 	++m_frame;
 }
 
-void GLWidget::setGeom(Line* geometry)
+void GLWidget::setGeom(IGeometry* geometry)
 {
-	mGeometry = geometry;
+	mGeometry.push_back(geometry);
 }
 
 void GLWidget::setShapeColor()

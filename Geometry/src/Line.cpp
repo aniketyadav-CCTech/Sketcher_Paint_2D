@@ -9,6 +9,7 @@ Line::Line():IGeometry("Line")
 Line::Line(const Point& _endpoint1, const Point& _endpoint2):
 	endpoint1(_endpoint1),endpoint2(_endpoint2)
 {
+	name = "Line";
 }
 
 void Line::input()

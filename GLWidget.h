@@ -23,13 +23,13 @@ public:
 	void initializeGL() override;
 	void paintGL() override;
 	void render();
-	void setGeom(Line* geometry);
+	void setGeom(IGeometry* geometry);
 	void setShapeColor();
 public slots:
 	void toggleLineDrawing(bool enabled);
 
 private:
-	Line* mGeometry;
+	std::vector<IGeometry*> mGeometry;
 	QColor m_shapeColor;
 	bool drawLine;
 
