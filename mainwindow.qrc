@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>Resources/icons/circle.png</file>
+        <file>Resources/icons/close_file.png</file>
+        <file>Resources/icons/help.png</file>
+        <file>Resources/icons/line.png</file>
+        <file>Resources/icons/open_file.png</file>
+        <file>Resources/icons/pencil.png</file>
+        <file>Resources/icons/polygon.png</file>
+        <file>Resources/icons/rectangle.png</file>
+        <file>Resources/icons/redo.png</file>
+        <file>Resources/icons/save.png</file>
+        <file>Resources/icons/triangle.png</file>
+        <file>Resources/icons/undo.png</file>
+    </qresource>
+</RCC>
