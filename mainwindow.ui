@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="GLWidget" name="openGLWidget">
+   <widget class="GLWidget" name="openGLWidget" native="true">
     <property name="geometry">
      <rect>
       <x>313</x>
@@ -35,8 +35,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>51</width>
-      <height>51</height>
+      <width>50</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="text">
@@ -52,8 +52,8 @@
      <rect>
       <x>60</x>
       <y>10</y>
-      <width>51</width>
-      <height>51</height>
+      <width>50</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="text">
@@ -64,30 +64,13 @@
       <normaloff>:/new/prefix1/Resources/icons/rectangle.png</normaloff>:/new/prefix1/Resources/icons/rectangle.png</iconset>
     </property>
    </widget>
-   <widget class="QPushButton" name="circlebutton">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>10</y>
-      <width>51</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="mainwindow.qrc">
-      <normaloff>:/new/prefix1/Resources/icons/circle.png</normaloff>:/new/prefix1/Resources/icons/circle.png</iconset>
-    </property>
-   </widget>
    <widget class="QPushButton" name="triangleButton">
     <property name="geometry">
      <rect>
       <x>160</x>
       <y>10</y>
-      <width>51</width>
-      <height>51</height>
+      <width>50</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="text">
@@ -103,8 +86,8 @@
      <rect>
       <x>210</x>
       <y>10</y>
-      <width>51</width>
-      <height>51</height>
+      <width>50</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="text">
@@ -118,10 +101,10 @@
    <widget class="QPushButton" name="pencilButton">
     <property name="geometry">
      <rect>
-      <x>261</x>
-      <y>9</y>
-      <width>51</width>
-      <height>51</height>
+      <x>260</x>
+      <y>10</y>
+      <width>50</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="text">
@@ -168,6 +151,23 @@
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
+   <widget class="QPushButton" name="circleButton">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>10</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="mainwindow.qrc">
+      <normaloff>:/new/prefix1/Resources/icons/circle.png</normaloff>:/new/prefix1/Resources/icons/circle.png</iconset>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -175,7 +175,7 @@
      <x>0</x>
      <y>0</y>
      <width>1039</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -262,8 +262,8 @@
  <customwidgets>
   <customwidget>
    <class>GLWidget</class>
-   <extends>QOpenGLWidget</extends>
-   <header location="global">GLWidget.h</header>
+   <extends>QWidget</extends>
+   <header>glwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -1,8 +1,9 @@
 #include "Line.h"
 #include "Line.h"
-#include <sstream>
+#include "Line.h"
 
-Line::Line():IGeometry("Line")
+
+Line::Line():IGeometry("Line")//,mColor(0.0f)
 {
 }
 
@@ -19,15 +20,15 @@ void Line::input()
 }
 
 void Line::display()
-{
-	std::cout << name << " : ("
-		<< this->endpoint1.getX() << ", "
-		<< this->endpoint1.getY() << ", "
-		<< this->endpoint1.getZ() << "), ("
-		<< this->endpoint2.getX() << ", "
-		<< this->endpoint2.getY() << ", "
-		<< this->endpoint2.getZ() << ")"
-		<< std::endl;
+{	
+	//glBegin(GL_LINES);
+	////glColor3f(1.0f, 0.0f, 0.0f);
+	//glColor3f(mColor.r,mColor.g,mColor.b);
+	//Point s = this->getStartpoint();
+	//glVertex2f(s.getX(), s.getY());
+	//Point e = this->getEndpoint();
+	//glVertex2f(e.getX(), e.getY());
+	//glEnd();
 }
 
 std::string Line::toString()
@@ -52,7 +53,25 @@ Point Line::getEndpoint()
 	return endpoint1;
 }
 
+void Line::setStartPoint(Point start)
+{
+	endpoint1 = start;
+}
+
+void Line::setEndPoint(Point end)
+{
+	endpoint2 = end;
+}
+
 Point Line::getStartpoint()
 {
 	return endpoint2;
 }
+
+void Line::setColor(float r, float g, float b)
+{
+	m_colR = r;
+	m_colG = g;
+	m_colB = b;
+}
+

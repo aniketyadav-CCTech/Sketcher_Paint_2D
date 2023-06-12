@@ -47,16 +47,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lineinputdialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mainwindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pointinputdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GLWidget.cpp">
@@ -64,13 +58,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="lineinputdialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="mainwindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="pointinputdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="GLWidget.h">
@@ -86,13 +74,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="lineinputdialog.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="mainwindow.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="pointinputdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -1,57 +1,55 @@
 #pragma once
+#ifndef GLWIDGET_H
+#define GLWIDGET_H
 
 #include <QtCore/qmath.h>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
+#include <QMouseEvent>
 
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <glm/glm.hpp>
 #include "Line.h"
+#include "Circle.h"
+#include "Triangle.h"
 
 #define PI 3.141592653
+
+enum DrawingMode { LineMode, QuadMode, CircleMode, TriangleMode, PolygonMode, PencilMode };
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions 
 {
 	Q_OBJECT
 
 public:
-	GLWidget(QWidget* parent = nullptr);
-	GLWidget(float in_x_offset, float in_y_offset, float in_z_offset);
+	explicit GLWidget(QWidget* parent = nullptr);
 	void initializeGL() override;
 	void paintGL() override;
-	void render();
-	void setGeom(IGeometry* geometry);
-	void setShapeColor();
-public slots:
-	void toggleLineDrawing(bool enabled);
+	void addGeom(IGeometry* geometry);
+	void setShapeColor(QColor color);
+	Point* startPoint;
+	Point* endPoint;
+	void drawGeom(IGeometry* geom);
+	void setDrawingMode(DrawingMode mode);
+
+private slots:
+	void mousePressEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent* event);
+
+protected:
+	void resizeEvent(QResizeEvent* event) override;
 
 private:
+	IGeometry* geom;
 	std::vector<IGeometry*> mGeometry;
 	QColor m_shapeColor;
-	bool drawLine;
-
-	float x_offset, y_offset, z_offset;
-	//Vector for holding coordinates
-	std::vector<GLfloat> vertices;
-
-	//Vector for the colors
-	std::vector<GLfloat> colors;
-
-
-	GLuint m_posAttr, m_colAttr;
-
-	GLuint m_matrixUniform;
-	QOpenGLShaderProgram* m_program;
-	int m_frame;
-
-	//Shader source variables
-	std::string vertex_shader_source;
-	std::string fragment_shader_source;
-
-	//Utility function to read a text file into a string for the shader compiler
-	std::string loadShader(std::string shader_path);
+	glm::vec3 color;
+	DrawingMode currentMode;
 };
 
+
+#endif // !GLWIDGET_H

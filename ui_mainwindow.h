@@ -9,7 +9,6 @@
 #ifndef UI_MAINWINDOW_H
 #define UI_MAINWINDOW_H
 
-#include <GLWidget.h>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QIcon>
@@ -22,6 +21,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
+#include "glwidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -38,13 +38,13 @@ public:
     GLWidget *openGLWidget;
     QPushButton *lineButton;
     QPushButton *rectangleButton;
-    QPushButton *circlebutton;
     QPushButton *triangleButton;
     QPushButton *polygonButton;
     QPushButton *pencilButton;
     QListWidget *listWidget;
     QFrame *line;
     QFrame *line_2;
+    QPushButton *circleButton;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -94,40 +94,34 @@ public:
         openGLWidget->setMinimumSize(QSize(0, 0));
         lineButton = new QPushButton(centralwidget);
         lineButton->setObjectName("lineButton");
-        lineButton->setGeometry(QRect(10, 10, 51, 51));
+        lineButton->setGeometry(QRect(10, 10, 50, 50));
         QIcon icon6;
         icon6.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/line.png"), QSize(), QIcon::Normal, QIcon::Off);
         lineButton->setIcon(icon6);
         rectangleButton = new QPushButton(centralwidget);
         rectangleButton->setObjectName("rectangleButton");
-        rectangleButton->setGeometry(QRect(60, 10, 51, 51));
+        rectangleButton->setGeometry(QRect(60, 10, 50, 50));
         QIcon icon7;
         icon7.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/rectangle.png"), QSize(), QIcon::Normal, QIcon::Off);
         rectangleButton->setIcon(icon7);
-        circlebutton = new QPushButton(centralwidget);
-        circlebutton->setObjectName("circlebutton");
-        circlebutton->setGeometry(QRect(110, 10, 51, 51));
-        QIcon icon8;
-        icon8.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/circle.png"), QSize(), QIcon::Normal, QIcon::Off);
-        circlebutton->setIcon(icon8);
         triangleButton = new QPushButton(centralwidget);
         triangleButton->setObjectName("triangleButton");
-        triangleButton->setGeometry(QRect(160, 10, 51, 51));
-        QIcon icon9;
-        icon9.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/triangle.png"), QSize(), QIcon::Normal, QIcon::Off);
-        triangleButton->setIcon(icon9);
+        triangleButton->setGeometry(QRect(160, 10, 50, 50));
+        QIcon icon8;
+        icon8.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/triangle.png"), QSize(), QIcon::Normal, QIcon::Off);
+        triangleButton->setIcon(icon8);
         polygonButton = new QPushButton(centralwidget);
         polygonButton->setObjectName("polygonButton");
-        polygonButton->setGeometry(QRect(210, 10, 51, 51));
-        QIcon icon10;
-        icon10.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/polygon.png"), QSize(), QIcon::Normal, QIcon::Off);
-        polygonButton->setIcon(icon10);
+        polygonButton->setGeometry(QRect(210, 10, 50, 50));
+        QIcon icon9;
+        icon9.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/polygon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        polygonButton->setIcon(icon9);
         pencilButton = new QPushButton(centralwidget);
         pencilButton->setObjectName("pencilButton");
-        pencilButton->setGeometry(QRect(261, 9, 51, 51));
-        QIcon icon11;
-        icon11.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/pencil.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pencilButton->setIcon(icon11);
+        pencilButton->setGeometry(QRect(260, 10, 50, 50));
+        QIcon icon10;
+        icon10.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/pencil.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pencilButton->setIcon(icon10);
         listWidget = new QListWidget(centralwidget);
         listWidget->setObjectName("listWidget");
         listWidget->setGeometry(QRect(13, 78, 271, 511));
@@ -141,10 +135,16 @@ public:
         line_2->setGeometry(QRect(286, 82, 20, 501));
         line_2->setFrameShape(QFrame::VLine);
         line_2->setFrameShadow(QFrame::Sunken);
+        circleButton = new QPushButton(centralwidget);
+        circleButton->setObjectName("circleButton");
+        circleButton->setGeometry(QRect(110, 10, 50, 50));
+        QIcon icon11;
+        icon11.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/circle.png"), QSize(), QIcon::Normal, QIcon::Off);
+        circleButton->setIcon(icon11);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1039, 22));
+        menubar->setGeometry(QRect(0, 0, 1039, 26));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName("menuFile");
         menuEdit = new QMenu(menubar);
@@ -182,10 +182,10 @@ public:
         actionView_Help->setText(QCoreApplication::translate("MainWindow", "View Help", nullptr));
         lineButton->setText(QString());
         rectangleButton->setText(QString());
-        circlebutton->setText(QString());
         triangleButton->setText(QString());
         polygonButton->setText(QString());
         pencilButton->setText(QString());
+        circleButton->setText(QString());
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuEdit->setTitle(QCoreApplication::translate("MainWindow", "Edit", nullptr));
         menuHelp->setTitle(QCoreApplication::translate("MainWindow", "Help", nullptr));
