@@ -17,25 +17,6 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="GLWidget" name="openGLWidget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>233</x>
-      <y>78</y>
-      <width>791</width>
-      <height>511</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>0</height>
-     </size>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="geometrySelection">
     <property name="geometry">
      <rect>
@@ -312,7 +293,7 @@ background-color: rgb(0, 0, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>1039</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -396,13 +377,6 @@ background-color: rgb(0, 0, 255);</string>
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>GLWidget</class>
-   <extends>QWidget</extends>
-   <header>glwidget.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="mainwindow.qrc"/>
  </resources>

@@ -46,25 +46,20 @@ private slots:
     void on_cyanColor_clicked();
 
 protected:
-	void addTopLevelItems();
+
 	void changeEvent(QEvent* event);
 
 private:
 	void updateListView();
-	void addChild(QTreeWidgetItem* TopLevelItem, std::string text);
+	//void addChild(QTreeWidgetItem* TopLevelItem, std::string text);
+
 
 private:
 	std::vector<IGeometry*> sketches;
 	Ui::MainWindow* ui;
 	QTreeWidget* treeWidget;
 	QColor colorMode;
-	QTreeWidgetItem* itemLine;
-	QTreeWidgetItem* itemQuad;
-	QTreeWidgetItem* itemCircle;
-	QTreeWidgetItem* itemTriangle;
-	QTreeWidgetItem* itemPolygon;
-	QTreeWidgetItem* itemPencil;
-	int count;
+	//int count;
 protected:
 	GLWidget* glWidget;
 };

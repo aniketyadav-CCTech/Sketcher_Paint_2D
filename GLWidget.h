@@ -7,6 +7,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QMouseEvent>
+#include <QTreeWidget>
 
 #include <string>
 #include <sstream>
@@ -17,7 +18,8 @@
 #include "Circle.h"
 #include "Triangle.h"
 #include "Quad.h"
-//#include "mainwindow.h"
+
+class MainWindow;
 
 #define PI 3.141592653
 
@@ -29,6 +31,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 
 public:
 	explicit GLWidget(QWidget* parent = nullptr);
+
 	void initializeGL() override;
 	void paintGL() override;
 	void addGeom(IGeometry* geometry);
@@ -36,6 +39,8 @@ public:
 	void drawGeom(IGeometry* geom);
 	void setDrawingMode(DrawingMode mode);
 	std::vector<IGeometry*> getGeomList();
+	void addGeomToTree();
+	void addTopLevelItems();
 
 private slots:
 	void mousePressEvent(QMouseEvent* event);
@@ -52,6 +57,21 @@ private:
 	std::vector<IGeometry*> mGeometry;
 	QColor m_shapeColor;
 	DrawingMode currentMode;
+	int lineCounter;
+	int quadCounter;
+	int circleCounter;
+	int triangleCounter;
+	int polygonCounter;
+	int pencilCounter;
+
+public:
+	QTreeWidget* tree;
+	QTreeWidgetItem* itemLine;
+	QTreeWidgetItem* itemQuad;
+	QTreeWidgetItem* itemCircle;
+	QTreeWidgetItem* itemTriangle;
+	QTreeWidgetItem* itemPolygon;
+	QTreeWidgetItem* itemPencil;
 };
 
 

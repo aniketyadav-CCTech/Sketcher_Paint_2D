@@ -22,7 +22,6 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QWidget>
-#include "glwidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -36,7 +35,6 @@ public:
     QAction *actionRedo;
     QAction *actionView_Help;
     QWidget *centralwidget;
-    GLWidget *openGLWidget;
     QGroupBox *geometrySelection;
     QPushButton *circleButton;
     QPushButton *triangleButton;
@@ -96,11 +94,6 @@ public:
         actionView_Help->setIcon(icon5);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        openGLWidget = new GLWidget(centralwidget);
-        openGLWidget->setObjectName("openGLWidget");
-        openGLWidget->setGeometry(QRect(233, 78, 791, 511));
-        openGLWidget->setMinimumSize(QSize(0, 0));
-        openGLWidget->setAutoFillBackground(false);
         geometrySelection = new QGroupBox(centralwidget);
         geometrySelection->setObjectName("geometrySelection");
         geometrySelection->setGeometry(QRect(10, 10, 201, 51));
@@ -190,7 +183,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1039, 26));
+        menubar->setGeometry(QRect(0, 0, 1039, 22));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName("menuFile");
         menuEdit = new QMenu(menubar);

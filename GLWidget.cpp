@@ -5,9 +5,18 @@
 
 
 GLWidget::GLWidget(QWidget* parent)
-	: QOpenGLWidget(parent), startPoint(nullptr), endPoint(nullptr)
+	: QOpenGLWidget(parent),
+	startPoint(nullptr),
+	endPoint(nullptr),
+	lineCounter(0),
+	quadCounter(0),
+	circleCounter(0),
+	triangleCounter(0),
+	polygonCounter(0),
+	pencilCounter(0)
 {
-	qDebug() << parent->objectName();
+	tree = parent->findChild<QTreeWidget*>("treeWidget");
+	addTopLevelItems();
 }
 
 void GLWidget::mousePressEvent(QMouseEvent* event)
@@ -65,6 +74,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			static_cast<Line*>(geom)->setEndPoint(*endPoint);
 			static_cast<Line*>(geom)->setColor(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
 			addGeom(geom);
+			lineCounter++;
 			break;
 		}
 		case QuadMode:
@@ -73,6 +83,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			static_cast<Quad*>(geom)->setEndPoint(*endPoint);
 			static_cast<Quad*>(geom)->setColor(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
 			addGeom(geom);
+			quadCounter++;
 			break;
 		}
 		case CircleMode:
@@ -83,6 +94,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			static_cast<Circle*>(geom)->mRadius = std::sqrt(deltaX * deltaX + deltaY * deltaY);
 			static_cast<Circle*>(geom)->setColor(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
 			addGeom(geom);
+			circleCounter++;
 			break;
 		}
 		case TriangleMode:
@@ -90,15 +102,18 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			static_cast<Triangle*>(geom)->setEndPoint(*endPoint);
 			static_cast<Triangle*>(geom)->setColor(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
 			addGeom(geom);
+			triangleCounter++;
 			break;
 		case PolygonMode:
+			polygonCounter++;
 			break;
 		case PencilMode:
+			pencilCounter++;
 			break;
 		default:
 			break;
 		}
-		
+		addGeomToTree();
 		update();
 	}
 	QOpenGLWidget::mousePressEvent(event);
@@ -180,8 +195,8 @@ void GLWidget::paintGL()
 				glColor3f(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
 				std::array<Point, 3> VertArray;
 				triangle->getTriangle(VertArray);
-				for(Point p : VertArray)
-				glVertex2f(p.getX(), p.getY());
+				for (Point p : VertArray)
+					glVertex2f(p.getX(), p.getY());
 				glEnd();
 				update();
 			}
@@ -215,5 +230,83 @@ std::vector<IGeometry*> GLWidget::getGeomList()
 	return mGeometry;
 }
 
+void GLWidget::addGeomToTree()
+{
+	switch (currentMode)
+	{
+	case LineMode:
+	{
+		QTreeWidgetItem* item = itemLine;
+		QTreeWidgetItem* child = new QTreeWidgetItem();
+		std::string text = "Line " + std::to_string(lineCounter);
+		child->setText(0, text.c_str());
+		item->addChild(child);
+		break;
+	}
+	case QuadMode: {
+		QTreeWidgetItem* item = itemQuad;
+		QTreeWidgetItem* child = new QTreeWidgetItem();
+		std::string text = "Quad " + std::to_string(quadCounter);
+		child->setText(0, text.c_str());
+		item->addChild(child);
+		break;
+	}
+	case CircleMode: {
+		QTreeWidgetItem* item = itemCircle;
+		QTreeWidgetItem* child = new QTreeWidgetItem();
+		std::string text = "Circle " + std::to_string(circleCounter);
+		child->setText(0, text.c_str());
+		item->addChild(child);
+		break;
+	}
+	case TriangleMode: {
+		QTreeWidgetItem* item = itemTriangle;
+		QTreeWidgetItem* child = new QTreeWidgetItem();
+		std::string text = "Triangle " + std::to_string(triangleCounter);
+		child->setText(0, text.c_str());
+		item->addChild(child);
+		break;
+	}
+	case PolygonMode: {
+		QTreeWidgetItem* item = itemPolygon;
+		QTreeWidgetItem* child = new QTreeWidgetItem();
+		std::string text = "Polygon " + std::to_string(polygonCounter);
+		child->setText(0, text.c_str());
+		item->addChild(child);
+		break;
+	}
+	case PencilMode: {
+		QTreeWidgetItem* item = itemPencil;
+		QTreeWidgetItem* child = new QTreeWidgetItem();
+		std::string text = "Pencil " + std::to_string(pencilCounter);
+		child->setText(0, text.c_str());
+		item->addChild(child);
+		break;
+	}
+	default:
+		break;
+	}
 
+}
 
+void GLWidget::addTopLevelItems()
+{
+	itemLine = new QTreeWidgetItem(tree);
+	itemQuad = new QTreeWidgetItem(tree);
+	itemCircle = new QTreeWidgetItem(tree);
+	itemTriangle = new QTreeWidgetItem(tree);
+	itemPolygon = new QTreeWidgetItem(tree);
+	itemPencil = new QTreeWidgetItem(tree);
+	itemLine->setText(0, std::string("Line").c_str());
+	itemQuad->setText(0, std::string("Quad").c_str());
+	itemCircle->setText(0, std::string("Circle").c_str());
+	itemTriangle->setText(0, std::string("Triangle").c_str());
+	itemPolygon->setText(0, std::string("Polygon").c_str());
+	itemPencil->setText(0, std::string("Pencil").c_str());
+	tree->addTopLevelItem(itemLine);
+	tree->addTopLevelItem(itemQuad);
+	tree->addTopLevelItem(itemCircle);
+	tree->addTopLevelItem(itemTriangle);
+	tree->addTopLevelItem(itemPolygon);
+	tree->addTopLevelItem(itemPencil);
+}
