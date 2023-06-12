@@ -13,13 +13,14 @@
 #include <QtGui/QAction>
 #include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QListWidget>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QWidget>
 #include "glwidget.h"
 
@@ -36,15 +37,21 @@ public:
     QAction *actionView_Help;
     QWidget *centralwidget;
     GLWidget *openGLWidget;
-    QPushButton *lineButton;
-    QPushButton *rectangleButton;
+    QGroupBox *geometrySelection;
+    QPushButton *circleButton;
     QPushButton *triangleButton;
     QPushButton *polygonButton;
     QPushButton *pencilButton;
-    QListWidget *listWidget;
-    QFrame *line;
-    QFrame *line_2;
-    QPushButton *circleButton;
+    QPushButton *lineButton;
+    QPushButton *rectangleButton;
+    QGroupBox *colorButtons;
+    QPushButton *greenColor;
+    QPushButton *blackColor;
+    QPushButton *yellowColor;
+    QPushButton *cyanColor;
+    QPushButton *redColor;
+    QPushButton *blueColor;
+    QTreeWidget *treeWidget;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -56,6 +63,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
         MainWindow->resize(1039, 643);
+        MainWindow->setStyleSheet(QString::fromUtf8(""));
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName("actionOpen");
         QIcon icon;
@@ -90,57 +98,95 @@ public:
         centralwidget->setObjectName("centralwidget");
         openGLWidget = new GLWidget(centralwidget);
         openGLWidget->setObjectName("openGLWidget");
-        openGLWidget->setGeometry(QRect(313, 78, 711, 511));
+        openGLWidget->setGeometry(QRect(233, 78, 791, 511));
         openGLWidget->setMinimumSize(QSize(0, 0));
-        lineButton = new QPushButton(centralwidget);
-        lineButton->setObjectName("lineButton");
-        lineButton->setGeometry(QRect(10, 10, 50, 50));
-        QIcon icon6;
-        icon6.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/line.png"), QSize(), QIcon::Normal, QIcon::Off);
-        lineButton->setIcon(icon6);
-        rectangleButton = new QPushButton(centralwidget);
-        rectangleButton->setObjectName("rectangleButton");
-        rectangleButton->setGeometry(QRect(60, 10, 50, 50));
-        QIcon icon7;
-        icon7.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/rectangle.png"), QSize(), QIcon::Normal, QIcon::Off);
-        rectangleButton->setIcon(icon7);
-        triangleButton = new QPushButton(centralwidget);
-        triangleButton->setObjectName("triangleButton");
-        triangleButton->setGeometry(QRect(160, 10, 50, 50));
-        QIcon icon8;
-        icon8.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/triangle.png"), QSize(), QIcon::Normal, QIcon::Off);
-        triangleButton->setIcon(icon8);
-        polygonButton = new QPushButton(centralwidget);
-        polygonButton->setObjectName("polygonButton");
-        polygonButton->setGeometry(QRect(210, 10, 50, 50));
-        QIcon icon9;
-        icon9.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/polygon.png"), QSize(), QIcon::Normal, QIcon::Off);
-        polygonButton->setIcon(icon9);
-        pencilButton = new QPushButton(centralwidget);
-        pencilButton->setObjectName("pencilButton");
-        pencilButton->setGeometry(QRect(260, 10, 50, 50));
-        QIcon icon10;
-        icon10.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/pencil.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pencilButton->setIcon(icon10);
-        listWidget = new QListWidget(centralwidget);
-        listWidget->setObjectName("listWidget");
-        listWidget->setGeometry(QRect(13, 78, 271, 511));
-        line = new QFrame(centralwidget);
-        line->setObjectName("line");
-        line->setGeometry(QRect(17, 60, 1001, 16));
-        line->setFrameShape(QFrame::HLine);
-        line->setFrameShadow(QFrame::Sunken);
-        line_2 = new QFrame(centralwidget);
-        line_2->setObjectName("line_2");
-        line_2->setGeometry(QRect(286, 82, 20, 501));
-        line_2->setFrameShape(QFrame::VLine);
-        line_2->setFrameShadow(QFrame::Sunken);
-        circleButton = new QPushButton(centralwidget);
+        openGLWidget->setAutoFillBackground(false);
+        geometrySelection = new QGroupBox(centralwidget);
+        geometrySelection->setObjectName("geometrySelection");
+        geometrySelection->setGeometry(QRect(10, 10, 201, 51));
+        geometrySelection->setStyleSheet(QString::fromUtf8("background-color: white;"));
+        circleButton = new QPushButton(geometrySelection);
         circleButton->setObjectName("circleButton");
-        circleButton->setGeometry(QRect(110, 10, 50, 50));
+        circleButton->setGeometry(QRect(70, 10, 30, 30));
+        circleButton->setStyleSheet(QString::fromUtf8("border: none;"));
+        QIcon icon6;
+        icon6.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/circle.png"), QSize(), QIcon::Normal, QIcon::Off);
+        circleButton->setIcon(icon6);
+        triangleButton = new QPushButton(geometrySelection);
+        triangleButton->setObjectName("triangleButton");
+        triangleButton->setGeometry(QRect(100, 10, 30, 30));
+        triangleButton->setStyleSheet(QString::fromUtf8("border: none;"));
+        QIcon icon7;
+        icon7.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/triangle.png"), QSize(), QIcon::Normal, QIcon::Off);
+        triangleButton->setIcon(icon7);
+        polygonButton = new QPushButton(geometrySelection);
+        polygonButton->setObjectName("polygonButton");
+        polygonButton->setGeometry(QRect(130, 10, 30, 30));
+        polygonButton->setStyleSheet(QString::fromUtf8("border: none;"));
+        QIcon icon8;
+        icon8.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/polygon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        polygonButton->setIcon(icon8);
+        pencilButton = new QPushButton(geometrySelection);
+        pencilButton->setObjectName("pencilButton");
+        pencilButton->setGeometry(QRect(160, 10, 30, 30));
+        pencilButton->setStyleSheet(QString::fromUtf8("border: none;"));
+        QIcon icon9;
+        icon9.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/pencil.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pencilButton->setIcon(icon9);
+        lineButton = new QPushButton(geometrySelection);
+        lineButton->setObjectName("lineButton");
+        lineButton->setGeometry(QRect(10, 10, 30, 30));
+        lineButton->setStyleSheet(QString::fromUtf8("border: none;"));
+        QIcon icon10;
+        icon10.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/line.png"), QSize(), QIcon::Normal, QIcon::Off);
+        lineButton->setIcon(icon10);
+        rectangleButton = new QPushButton(geometrySelection);
+        rectangleButton->setObjectName("rectangleButton");
+        rectangleButton->setGeometry(QRect(40, 10, 30, 30));
+        rectangleButton->setStyleSheet(QString::fromUtf8("border: none;"));
         QIcon icon11;
-        icon11.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/circle.png"), QSize(), QIcon::Normal, QIcon::Off);
-        circleButton->setIcon(icon11);
+        icon11.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/rectangle.png"), QSize(), QIcon::Normal, QIcon::Off);
+        rectangleButton->setIcon(icon11);
+        colorButtons = new QGroupBox(centralwidget);
+        colorButtons->setObjectName("colorButtons");
+        colorButtons->setGeometry(QRect(220, 10, 211, 51));
+        colorButtons->setStyleSheet(QString::fromUtf8("background-color: white;"));
+        greenColor = new QPushButton(colorButtons);
+        greenColor->setObjectName("greenColor");
+        greenColor->setGeometry(QRect(74, 10, 30, 30));
+        greenColor->setStyleSheet(QString::fromUtf8("border: none;\n"
+"background-color: rgb(0, 255, 0);"));
+        blackColor = new QPushButton(colorButtons);
+        blackColor->setObjectName("blackColor");
+        blackColor->setGeometry(QRect(106, 10, 30, 30));
+        blackColor->setStyleSheet(QString::fromUtf8("border: none;\n"
+"background-color: rgb(0, 0, 0);"));
+        yellowColor = new QPushButton(colorButtons);
+        yellowColor->setObjectName("yellowColor");
+        yellowColor->setGeometry(QRect(138, 10, 30, 30));
+        yellowColor->setStyleSheet(QString::fromUtf8("border: none;\n"
+"background-color: rgb(255, 255, 0);"));
+        cyanColor = new QPushButton(colorButtons);
+        cyanColor->setObjectName("cyanColor");
+        cyanColor->setGeometry(QRect(171, 10, 30, 30));
+        cyanColor->setStyleSheet(QString::fromUtf8("border: none;\n"
+"background-color: rgb(0, 255, 255);"));
+        redColor = new QPushButton(colorButtons);
+        redColor->setObjectName("redColor");
+        redColor->setGeometry(QRect(10, 10, 30, 30));
+        redColor->setStyleSheet(QString::fromUtf8("border: none;\n"
+"background-color: rgb(255, 0, 0);"));
+        blueColor = new QPushButton(colorButtons);
+        blueColor->setObjectName("blueColor");
+        blueColor->setGeometry(QRect(42, 10, 30, 30));
+        blueColor->setStyleSheet(QString::fromUtf8("border: none;\n"
+"background-color: rgb(0, 0, 255);"));
+        treeWidget = new QTreeWidget(centralwidget);
+        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
+        __qtreewidgetitem->setText(0, QString::fromUtf8("1"));
+        treeWidget->setHeaderItem(__qtreewidgetitem);
+        treeWidget->setObjectName("treeWidget");
+        treeWidget->setGeometry(QRect(10, 70, 201, 521));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -180,12 +226,20 @@ public:
         actionUndo->setText(QCoreApplication::translate("MainWindow", "Undo", nullptr));
         actionRedo->setText(QCoreApplication::translate("MainWindow", "Redo", nullptr));
         actionView_Help->setText(QCoreApplication::translate("MainWindow", "View Help", nullptr));
-        lineButton->setText(QString());
-        rectangleButton->setText(QString());
+        geometrySelection->setTitle(QString());
+        circleButton->setText(QString());
         triangleButton->setText(QString());
         polygonButton->setText(QString());
         pencilButton->setText(QString());
-        circleButton->setText(QString());
+        lineButton->setText(QString());
+        rectangleButton->setText(QString());
+        colorButtons->setTitle(QString());
+        greenColor->setText(QString());
+        blackColor->setText(QString());
+        yellowColor->setText(QString());
+        cyanColor->setText(QString());
+        redColor->setText(QString());
+        blueColor->setText(QString());
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuEdit->setTitle(QCoreApplication::translate("MainWindow", "Edit", nullptr));
         menuHelp->setTitle(QCoreApplication::translate("MainWindow", "Help", nullptr));

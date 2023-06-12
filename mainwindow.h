@@ -3,10 +3,14 @@
 #include <QMainWindow>
 #include <QOpenGLFunctions>
 #include "GLWidget.h"
+#include <QTreeWidget>
+#include <QStringListModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+enum ColorMode { Red = Qt::red, Blue = Qt::blue, Green = Qt::green, Black = Qt::black, Yellow = Qt::yellow, Cyan = Qt::cyan};
 
 class MainWindow : public QMainWindow
 {
@@ -29,14 +33,38 @@ private slots:
 
     void on_pencilButton_clicked();
 
+    void on_redColor_clicked();
+
+    void on_blueColor_clicked();
+
+    void on_greenColor_clicked();
+
+    void on_blackColor_clicked();
+
+    void on_yellowColor_clicked();
+
+    void on_cyanColor_clicked();
+
 protected:
+	void addTopLevelItems();
 	void changeEvent(QEvent* event);
 
+private:
+	void updateListView();
+	void addChild(QTreeWidgetItem* TopLevelItem, std::string text);
 
 private:
 	std::vector<IGeometry*> sketches;
 	Ui::MainWindow* ui;
-
+	QTreeWidget* treeWidget;
+	QColor colorMode;
+	QTreeWidgetItem* itemLine;
+	QTreeWidgetItem* itemQuad;
+	QTreeWidgetItem* itemCircle;
+	QTreeWidgetItem* itemTriangle;
+	QTreeWidgetItem* itemPolygon;
+	QTreeWidgetItem* itemPencil;
+	int count;
 protected:
 	GLWidget* glWidget;
 };

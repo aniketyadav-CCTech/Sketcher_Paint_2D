@@ -13,11 +13,16 @@ public:
 	double mRadius;
 	Circle();
 	Circle(Point centerPoint, float radius);
+
 	void input() override;
 	void display() override;
 	std::string toString() override;
+	
 	float getRadius() { return mRadius; };
-	//void setColor(glm::vec3 color);
-	//glm::vec3 mColor;
+	void setColor(float r, float g, float b);
+
+
+private:
+	float m_colR, m_colG, m_colB;
 };
 #endif // !CIRCLE_H

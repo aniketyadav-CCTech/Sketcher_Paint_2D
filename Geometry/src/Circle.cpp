@@ -1,4 +1,5 @@
 #include "Circle.h"
+#include "Circle.h"
 #include <sstream>
 
 #define M_PI 3.14159
@@ -46,6 +47,12 @@ std::string Circle::toString()
 	return ss.str();
 }
 
+void Circle::setColor(float r, float g, float b)
+{
+	m_colR = r;
+	m_colG = g;
+	m_colB = b;
+}
 //void Circle::setColor(glm::vec3 color)
 //{
 //	mColor = color;

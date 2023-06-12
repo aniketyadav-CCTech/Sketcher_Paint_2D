@@ -16,6 +16,8 @@
 #include "Line.h"
 #include "Circle.h"
 #include "Triangle.h"
+#include "Quad.h"
+//#include "mainwindow.h"
 
 #define PI 3.141592653
 
@@ -31,10 +33,9 @@ public:
 	void paintGL() override;
 	void addGeom(IGeometry* geometry);
 	void setShapeColor(QColor color);
-	Point* startPoint;
-	Point* endPoint;
 	void drawGeom(IGeometry* geom);
 	void setDrawingMode(DrawingMode mode);
+	std::vector<IGeometry*> getGeomList();
 
 private slots:
 	void mousePressEvent(QMouseEvent* event);
@@ -43,11 +44,13 @@ private slots:
 protected:
 	void resizeEvent(QResizeEvent* event) override;
 
+public:
+	Point* startPoint;
+	Point* endPoint;
 private:
 	IGeometry* geom;
 	std::vector<IGeometry*> mGeometry;
 	QColor m_shapeColor;
-	glm::vec3 color;
 	DrawingMode currentMode;
 };
 

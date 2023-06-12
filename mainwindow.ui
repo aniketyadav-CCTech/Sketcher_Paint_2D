@@ -13,13 +13,16 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="GLWidget" name="openGLWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>313</x>
+      <x>233</x>
       <y>78</y>
-      <width>711</width>
+      <width>791</width>
       <height>511</height>
      </rect>
     </property>
@@ -29,144 +32,278 @@
       <height>0</height>
      </size>
     </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
    </widget>
-   <widget class="QPushButton" name="lineButton">
+   <widget class="QGroupBox" name="geometrySelection">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>50</width>
-      <height>50</height>
+      <width>201</width>
+      <height>51</height>
      </rect>
     </property>
-    <property name="text">
+    <property name="styleSheet">
+     <string notr="true">background-color: white;</string>
+    </property>
+    <property name="title">
      <string/>
     </property>
-    <property name="icon">
-     <iconset resource="mainwindow.qrc">
-      <normaloff>:/new/prefix1/Resources/icons/line.png</normaloff>:/new/prefix1/Resources/icons/line.png</iconset>
-    </property>
+    <widget class="QPushButton" name="circleButton">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwindow.qrc">
+       <normaloff>:/new/prefix1/Resources/icons/circle.png</normaloff>:/new/prefix1/Resources/icons/circle.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="triangleButton">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwindow.qrc">
+       <normaloff>:/new/prefix1/Resources/icons/triangle.png</normaloff>:/new/prefix1/Resources/icons/triangle.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="polygonButton">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwindow.qrc">
+       <normaloff>:/new/prefix1/Resources/icons/polygon.png</normaloff>:/new/prefix1/Resources/icons/polygon.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pencilButton">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwindow.qrc">
+       <normaloff>:/new/prefix1/Resources/icons/pencil.png</normaloff>:/new/prefix1/Resources/icons/pencil.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="lineButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwindow.qrc">
+       <normaloff>:/new/prefix1/Resources/icons/line.png</normaloff>:/new/prefix1/Resources/icons/line.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="rectangleButton">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwindow.qrc">
+       <normaloff>:/new/prefix1/Resources/icons/rectangle.png</normaloff>:/new/prefix1/Resources/icons/rectangle.png</iconset>
+     </property>
+    </widget>
    </widget>
-   <widget class="QPushButton" name="rectangleButton">
+   <widget class="QGroupBox" name="colorButtons">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>220</x>
       <y>10</y>
-      <width>50</width>
-      <height>50</height>
+      <width>211</width>
+      <height>51</height>
      </rect>
     </property>
-    <property name="text">
+    <property name="styleSheet">
+     <string notr="true">background-color: white;</string>
+    </property>
+    <property name="title">
      <string/>
     </property>
-    <property name="icon">
-     <iconset resource="mainwindow.qrc">
-      <normaloff>:/new/prefix1/Resources/icons/rectangle.png</normaloff>:/new/prefix1/Resources/icons/rectangle.png</iconset>
-    </property>
+    <widget class="QPushButton" name="greenColor">
+     <property name="geometry">
+      <rect>
+       <x>74</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;
+background-color: rgb(0, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="blackColor">
+     <property name="geometry">
+      <rect>
+       <x>106</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;
+background-color: rgb(0, 0, 0);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="yellowColor">
+     <property name="geometry">
+      <rect>
+       <x>138</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;
+background-color: rgb(255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="cyanColor">
+     <property name="geometry">
+      <rect>
+       <x>171</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;
+background-color: rgb(0, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="redColor">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;
+background-color: rgb(255, 0, 0);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="blueColor">
+     <property name="geometry">
+      <rect>
+       <x>42</x>
+       <y>10</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;
+background-color: rgb(0, 0, 255);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
-   <widget class="QPushButton" name="triangleButton">
+   <widget class="QTreeWidget" name="treeWidget">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>10</y>
-      <width>50</width>
-      <height>50</height>
+      <x>10</x>
+      <y>70</y>
+      <width>201</width>
+      <height>521</height>
      </rect>
     </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="mainwindow.qrc">
-      <normaloff>:/new/prefix1/Resources/icons/triangle.png</normaloff>:/new/prefix1/Resources/icons/triangle.png</iconset>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="polygonButton">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>10</y>
-      <width>50</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="mainwindow.qrc">
-      <normaloff>:/new/prefix1/Resources/icons/polygon.png</normaloff>:/new/prefix1/Resources/icons/polygon.png</iconset>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pencilButton">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>10</y>
-      <width>50</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="mainwindow.qrc">
-      <normaloff>:/new/prefix1/Resources/icons/pencil.png</normaloff>:/new/prefix1/Resources/icons/pencil.png</iconset>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="listWidget">
-    <property name="geometry">
-     <rect>
-      <x>13</x>
-      <y>78</y>
-      <width>271</width>
-      <height>511</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="Line" name="line">
-    <property name="geometry">
-     <rect>
-      <x>17</x>
-      <y>60</y>
-      <width>1001</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>286</x>
-      <y>82</y>
-      <width>20</width>
-      <height>501</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="circleButton">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>10</y>
-      <width>50</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="mainwindow.qrc">
-      <normaloff>:/new/prefix1/Resources/icons/circle.png</normaloff>:/new/prefix1/Resources/icons/circle.png</iconset>
-    </property>
+    <column>
+     <property name="text">
+      <string notr="true">1</string>
+     </property>
+    </column>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

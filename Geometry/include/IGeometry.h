@@ -6,27 +6,22 @@
 #include<string>
 #include "Export.h"
 
-//#define GLEW_STATIC
-//#include <GL/glew.h>
-//#include <GL/gl.h>
-//#include <glm/glm.hpp>
-
-//#pragma comment(lib , "glew32.lib")
-//#pragma comment(lib , "opengl32.lib")
-
 class DllExport IGeometry
 {
 private:	
 	
 public:
-	std::string name;
 	IGeometry():name("") {};
-	IGeometry(std::string name ) {
-		this->name = name;
+	IGeometry(std::string _name) {
+		name = _name;
 	}
 	virtual void input() = 0;
 	virtual void display()=0;
 	virtual std::string toString()=0;
 	virtual ~IGeometry() {};
+
+public:
+	std::string geomID;
+	std::string name;
 };
 #endif // !IGEOMETRY_H

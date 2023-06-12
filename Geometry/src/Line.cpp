@@ -3,7 +3,7 @@
 #include "Line.h"
 
 
-Line::Line():IGeometry("Line")//,mColor(0.0f)
+Line::Line():IGeometry("Line")
 {
 }
 
