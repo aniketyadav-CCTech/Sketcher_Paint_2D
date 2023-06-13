@@ -43,13 +43,13 @@ void MainWindow::changeEvent(QEvent* event)
     QMainWindow::changeEvent(event);
 }
 
-void MainWindow::updateListView()
-{
-    std::vector<IGeometry*> list = glWidget->getGeomList();
-    //for(IGeometry* geom:sketches)
-    QTreeWidgetItem* treeItem = new QTreeWidgetItem(ui->treeWidget);
-
-}
+//void MainWindow::updateListView()
+//{
+//    std::vector<IGeometry*> list = glWidget->getGeomList();
+//    //for(IGeometry* geom:sketches)
+//    QTreeWidgetItem* treeItem = new QTreeWidgetItem(ui->treeWidget);
+//
+//}
 
 void MainWindow::on_lineButton_clicked()
 {

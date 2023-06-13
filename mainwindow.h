@@ -50,7 +50,7 @@ protected:
 	void changeEvent(QEvent* event);
 
 private:
-	void updateListView();
+	//void updateListView();
 	//void addChild(QTreeWidgetItem* TopLevelItem, std::string text);
 
 
