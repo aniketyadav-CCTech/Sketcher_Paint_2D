@@ -2,6 +2,7 @@
 #include <QOpenGLFunctions>
 #include <QScreen>
 #include <algorithm>
+#include <unordered_map>
 
 
 GLWidget::GLWidget(QWidget* parent)
@@ -139,9 +140,18 @@ void GLWidget::initializeGL()
 void GLWidget::paintGL()
 {
 	if (!mGeometry.empty()) {
+		std::unordered_map<std::string, DrawingMode> modeMap;
+		modeMap["Line"] = LineMode;
+		modeMap["Quad"] = QuadMode;
+		modeMap["Circle"] = CircleMode;
+		modeMap["Triangle"] = TriangleMode;
+		modeMap["Polygon"] = PolygonMode;
+		modeMap["Pencil"] = PencilMode;
 		for (auto geom : mGeometry)
 		{
-			if (geom->name == "Line")
+			DrawingMode mode = modeMap[geom->name];
+			switch (mode) {
+			case LineMode:
 			{
 				Line* line = dynamic_cast<Line*>(geom);
 				line->setColor(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
@@ -153,8 +163,9 @@ void GLWidget::paintGL()
 				glVertex2f(e.getX(), e.getY());
 				glEnd();
 				update();
+				break;
 			}
-			if (geom->name == "Circle")
+			case CircleMode:
 			{
 				Circle* circle = dynamic_cast<Circle*>(geom);
 				circle->setColor(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
@@ -169,8 +180,9 @@ void GLWidget::paintGL()
 				}
 				glEnd();
 				update();
+				break;
 			}
-			if (geom->name == "Quad")
+			case QuadMode:
 			{
 				Quad* quad = dynamic_cast<Quad*>(geom);
 				quad->setColor(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
@@ -186,8 +198,9 @@ void GLWidget::paintGL()
 				glVertex2f(v3.getX(), v3.getY());
 				glEnd();
 				update();
+				break;
 			}
-			if (geom->name == "Triangle")
+			case TriangleMode:
 			{
 				Triangle* triangle = dynamic_cast<Triangle*>(geom);
 				triangle->setColor(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
@@ -199,6 +212,10 @@ void GLWidget::paintGL()
 					glVertex2f(p.getX(), p.getY());
 				glEnd();
 				update();
+				break;
+			}
+			default:
+				break;
 			}
 		}
 
