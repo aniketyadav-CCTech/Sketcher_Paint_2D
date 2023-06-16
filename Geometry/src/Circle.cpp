@@ -4,7 +4,7 @@
 
 #define M_PI 3.14159
 
-Circle::Circle() :IGeometry("Circle"), mCenterPoint(0, 0, 0), mRadius(0)//,mColor(glm::vec3(0.0))
+Circle::Circle() :IGeometry("Circle"), mCenterPoint(0, 0, 0), mRadius(0)
 {
 }
 
@@ -47,13 +47,3 @@ std::string Circle::toString()
 	return ss.str();
 }
 
-void Circle::setColor(float r, float g, float b)
-{
-	m_colR = r;
-	m_colG = g;
-	m_colB = b;
-}
-//void Circle::setColor(glm::vec3 color)
-//{
-//	mColor = color;
-//}

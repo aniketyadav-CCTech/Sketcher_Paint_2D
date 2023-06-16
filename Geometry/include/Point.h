@@ -20,7 +20,6 @@ public:
 	void setY(float _y);
 	void setZ(float _z);
 
-
 private:
 	float x, y, z;
 };

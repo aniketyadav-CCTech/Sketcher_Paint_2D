@@ -5,6 +5,7 @@
 #include "GLWidget.h"
 #include <QTreeWidget>
 #include <QStringListModel>
+#include "IGeometry.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -58,7 +59,7 @@ private:
 	std::vector<IGeometry*> sketches;
 	Ui::MainWindow* ui;
 	QTreeWidget* treeWidget;
-	QColor colorMode;
+	Color colorMode;
 	//int count;
 protected:
 	GLWidget* glWidget;

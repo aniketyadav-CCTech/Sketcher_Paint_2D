@@ -68,10 +68,3 @@ Point Line::getStartpoint()
 	return endpoint2;
 }
 
-void Line::setColor(float r, float g, float b)
-{
-	m_colR = r;
-	m_colG = g;
-	m_colB = b;
-}
-

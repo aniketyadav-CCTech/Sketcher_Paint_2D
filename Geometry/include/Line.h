@@ -7,7 +7,6 @@
 class DllExport Line final: public IGeometry {
 private:
 	Point endpoint1, endpoint2;
-	float m_colR, m_colG, m_colB;
 
 public:
 	Line();
@@ -21,7 +20,6 @@ public:
 	Point getStartpoint();
 	void setStartPoint(Point start);
 	void setEndPoint(Point end);
-	void setColor(float r,float g, float b);
 };
 
 #endif

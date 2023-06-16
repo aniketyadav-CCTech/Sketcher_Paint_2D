@@ -85,10 +85,4 @@ void Quad::setEndPoint(Point end)
 	m_EndPoint = end;
 }
 
-void Quad::setColor(float r, float g, float b)
-{
-	m_colR = r;
-	m_colG = g;
-	m_colB = b;
-}
 

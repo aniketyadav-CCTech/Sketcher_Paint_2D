@@ -4,7 +4,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), colorMode(Black)
+    , ui(new Ui::MainWindow), colorMode(0.0f, 0.0f, 0.0f)
 {
     ui->setupUi(this);
 
@@ -54,12 +54,12 @@ void MainWindow::changeEvent(QEvent* event)
 void MainWindow::on_lineButton_clicked()
 {
     glWidget->setDrawingMode(LineMode);
-    glWidget->setShapeColor(colorMode);
+    glWidget->setColorMode(colorMode);
 
     IGeometry* line = new Line();
     //count++;
     //line->geomID = "Line " + std::to_string(count);
-    static_cast<Line*>(line)->setColor(colorMode.redF(), colorMode.greenF(), colorMode.blueF());
+    static_cast<Line*>(line)->setColor(colorMode);
     glWidget->drawGeom(line);
     sketches.push_back(line);
     glWidget->paintGL();
@@ -68,10 +68,10 @@ void MainWindow::on_lineButton_clicked()
 void MainWindow::on_circleButton_clicked()
 {
     glWidget->setDrawingMode(CircleMode);
-    glWidget->setShapeColor(colorMode);
+    glWidget->setColorMode(colorMode);
 
     IGeometry* circle = new Circle();
-    static_cast<Circle*>(circle)->setColor(colorMode.redF(), colorMode.greenF(), colorMode.blueF());
+    static_cast<Circle*>(circle)->setColor(colorMode);
     glWidget->drawGeom(circle);
     sketches.push_back(circle);
     glWidget->paintGL();
@@ -80,7 +80,7 @@ void MainWindow::on_circleButton_clicked()
 void MainWindow::on_rectangleButton_clicked()
 {
     glWidget->setDrawingMode(QuadMode);
-    glWidget->setShapeColor(colorMode);
+    glWidget->setColorMode(colorMode);
 
     IGeometry* quad = new Quad();
     glWidget->drawGeom(quad);
@@ -91,7 +91,7 @@ void MainWindow::on_rectangleButton_clicked()
 void MainWindow::on_triangleButton_clicked()
 {
     glWidget->setDrawingMode(TriangleMode);
-    glWidget->setShapeColor(colorMode);
+    glWidget->setColorMode(colorMode);
 
     IGeometry* triangle = new Triangle();
     glWidget->drawGeom(triangle);
@@ -109,32 +109,42 @@ void MainWindow::on_pencilButton_clicked()
 
 void MainWindow::on_redColor_clicked()
 {
-    colorMode = ColorMode::Red;
+    colorMode = Color(1.0f, 0.0f, 0.0f);
+    glWidget->setColorMode(colorMode);
 }
 
 void MainWindow::on_blueColor_clicked()
 {
-    colorMode = ColorMode::Blue;
+    colorMode = Color(0.0f, 0.0f, 1.0f);
+    glWidget->setColorMode(colorMode);
+
 }
 
 void MainWindow::on_greenColor_clicked()
 {
-    colorMode = ColorMode::Green;
+    colorMode = Color(0.0f, 1.0f, 0.0f);
+    glWidget->setColorMode(colorMode);
+
 }
 
 void MainWindow::on_blackColor_clicked()
 {
-    colorMode = ColorMode::Black;
+    colorMode = Color(0.0f, 0.0f, 0.0f);
+    glWidget->setColorMode(colorMode);
+
 }
 
 void MainWindow::on_yellowColor_clicked()
 {
-    colorMode = ColorMode::Yellow;
-}
+    colorMode = Color(1.0f, 1.0f, 0.0f);
+    glWidget->setColorMode(colorMode);
 
+}
 
 void MainWindow::on_cyanColor_clicked()
 {
-    colorMode = ColorMode::Cyan;
+    colorMode = Color(0.5f, 1.0f, 1.0f);
+    glWidget->setColorMode(colorMode);
+
 }
 

@@ -97,10 +97,3 @@ void Triangle::setEndPoint(Point end)
 	mP2.setX(centerPoint.getX() + sideLength * cos(angle1));
 	mP2.setY(centerPoint.getY() + sideLength * sin(angle1));
 }
-
-void Triangle::setColor(float r, float g, float b)
-{
-	m_colR = r;
-	m_colG = g;
-	m_colB = b;
-}
