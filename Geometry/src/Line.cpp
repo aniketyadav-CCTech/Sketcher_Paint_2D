@@ -48,7 +48,7 @@ void Line::generateLine()
 {
 }
 
-Point Line::getEndpoint()
+Point Line::getEndPoint()
 {
 	return endpoint1;
 }

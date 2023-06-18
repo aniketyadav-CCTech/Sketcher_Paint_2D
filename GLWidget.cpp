@@ -14,7 +14,8 @@ GLWidget::GLWidget(QWidget* parent)
 	circleCounter(0),
 	triangleCounter(0),
 	polygonCounter(0),
-	pencilCounter(0)
+	pencilCounter(0),
+	currentMode(LineMode)
 {
 	tree = parent->findChild<QTreeWidget*>("treeWidget");
 	addTopLevelItems();
@@ -29,29 +30,26 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
 		float glX = (x / static_cast<float>(width())) * 2.0f - 1.0f;
 		float glY = (y / static_cast<float>(height())) * 2.0f - 1.0f;
 		startPoint = new Point(glX, glY, 0);
-		if (endPoint != nullptr)
+		switch (currentMode)
 		{
-			switch (currentMode)
-			{
-			case LineMode:
-				geom = new Line();
-				break;
-			case QuadMode:
-				geom = new Quad();
-				break;
-			case CircleMode:
-				geom = new Circle();
-				break;
-			case TriangleMode:
-				geom = new Triangle();
-				break;
-			case PolygonMode:
-				break;
-			case PencilMode:
-				break;
-			default:
-				break;
-			}
+		case LineMode:
+			geom = new Line();
+			break;
+		case QuadMode:
+			geom = new Quad();
+			break;
+		case CircleMode:
+			geom = new Circle();
+			break;
+		case TriangleMode:
+			geom = new Triangle();
+			break;
+		case PolygonMode:
+			break;
+		case PencilMode:
+			break;
+		default:
+			break;
 		}
 	}
 	QOpenGLWidget::mousePressEvent(event);
@@ -75,64 +73,112 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			line->setEndPoint(*endPoint);
 			line->setColor(m_shapeColor);
 			std::vector<float> lineVertices;
-			lineVertices.push_back(line->getStartpoint().getX());
-			lineVertices.push_back(line->getStartpoint().getY());
-			lineVertices.push_back(line->getStartpoint().getZ());
-			lineVertices.push_back(line->getColor().r);
-			lineVertices.push_back(line->getColor().g);
-			lineVertices.push_back(line->getColor().b);
-			lineVertices.push_back(line->getEndpoint().getX());
-			lineVertices.push_back(line->getEndpoint().getY());
-			lineVertices.push_back(line->getEndpoint().getZ());
-			lineVertices.push_back(line->getColor().r);
-			lineVertices.push_back(line->getColor().g);
-			lineVertices.push_back(line->getColor().b);
+			addPointToVector(lineVertices, line->getStartpoint());
+			addColorToVector(lineVertices, line->getColor());
+			addPointToVector(lineVertices, line->getEndPoint());
+			addColorToVector(lineVertices, line->getColor());
 			mGeometryData.push_back(lineVertices);
+			lineVertices.clear();
 			addGeom(geom);
 			lineCounter++;
 			break;
 		}
 		case QuadMode:
 		{
-			static_cast<Quad*>(geom)->setStartPoint(*startPoint);
-			static_cast<Quad*>(geom)->setEndPoint(*endPoint);
-			static_cast<Quad*>(geom)->setColor(m_shapeColor);
+			Quad* quad = static_cast<Quad*>(geom);
+			quad->setStartPoint(*startPoint);
+			quad->setEndPoint(*endPoint);
+			quad->setColor(m_shapeColor);
+			std::vector<float> quadVerts;
+			addPointToVector(quadVerts, quad->getStartpoint());
+			addColorToVector(quadVerts, quad->getColor());
+			addPointToVector(quadVerts, quad->getVertex2());
+			addColorToVector(quadVerts, quad->getColor());
+			addPointToVector(quadVerts, quad->getEndpoint());
+			addColorToVector(quadVerts, quad->getColor());
+			addPointToVector(quadVerts, quad->getVertex3());
+			addColorToVector(quadVerts, quad->getColor());
+			mGeometryData.push_back(quadVerts);
 			addGeom(geom);
 			quadCounter++;
 			break;
 		}
 		case CircleMode:
 		{
-			static_cast<Circle*>(geom)->mCenterPoint = (*startPoint);
+			Circle* circle = static_cast<Circle*>(geom);
+			circle->mCenterPoint = (*startPoint);
 			float deltaX = startPoint->getX() - endPoint->getX();
 			float deltaY = startPoint->getY() - endPoint->getY();
-			static_cast<Circle*>(geom)->mRadius = std::sqrt(deltaX * deltaX + deltaY * deltaY);
-			static_cast<Circle*>(geom)->setColor(m_shapeColor);
+			circle->mRadius = std::sqrt(deltaX * deltaX + deltaY * deltaY);
+			circle->setColor(m_shapeColor);
+			const int num_segments = 30;
+			std::vector<float> circlePositions;
+			for (int i = 0; i < num_segments; i++) {
+				float theta = 2.0f * M_PI * float(i) / float(num_segments);
+				Point p;
+				p.setX(circle->getRadius() * cosf(theta) + circle->mCenterPoint.getX());
+				p.setY(circle->getRadius() * sinf(theta) + circle->mCenterPoint.getY());
+				addPointToVector(circlePositions, p);
+				addColorToVector(circlePositions, circle->getColor());
+			}
+			mGeometryData.push_back(circlePositions);
+			circlePositions.clear();
 			addGeom(geom);
 			circleCounter++;
 			break;
 		}
 		case TriangleMode:
-			static_cast<Triangle*>(geom)->setStartPoint(*startPoint);
-			static_cast<Triangle*>(geom)->setEndPoint(*endPoint);
-			static_cast<Triangle*>(geom)->setColor(m_shapeColor);
+		{
+			Triangle* triangle = static_cast<Triangle*>(geom);
+			triangle->setStartPoint(*startPoint);
+			triangle->setEndPoint(*endPoint);
+			triangle->setColor(m_shapeColor);
+			std::array<Point, 3> vertArray;
+			std::vector<float> triangleVerts;
+			triangle->getTriangle(vertArray);
+			for (auto point : vertArray) {
+				addPointToVector(triangleVerts, point);
+				addColorToVector(triangleVerts, triangle->getColor());
+			}
+			mGeometryData.push_back(triangleVerts);
+			triangleVerts.clear();
 			addGeom(geom);
 			triangleCounter++;
 			break;
+		}
 		case PolygonMode:
+		{
 			polygonCounter++;
 			break;
+		}
 		case PencilMode:
+		{
 			pencilCounter++;
 			break;
+		}
 		default:
 			break;
 		}
 		addGeomToTree();
 		paintGL();
-		//update();
+		emit geometryDrawn(geom);
+		update();
 	}
 	QOpenGLWidget::mousePressEvent(event);
+}
+
+void GLWidget::addPointToVector(std::vector<float>& vect, const Point& point)
+{
+	vect.push_back(point.getX());
+	vect.push_back(point.getY());
+	vect.push_back(point.getZ());
+}
+
+void GLWidget::addColorToVector(std::vector<float>& vect, const Color& color)
+{
+	vect.push_back(color.r);
+	vect.push_back(color.g);
+	vect.push_back(color.b);
 }
 
 void GLWidget::resizeEvent(QResizeEvent* event)
@@ -180,94 +226,9 @@ void GLWidget::initializeGL()
 	//**************************
 }
 
-
 void GLWidget::paintGL()
 {
-	if (!mGeometry.empty()) {
-		std::unordered_map<std::string, DrawingMode> modeMap;
-		modeMap["Line"] = LineMode;
-		modeMap["Quad"] = QuadMode;
-		modeMap["Circle"] = CircleMode;
-		modeMap["Triangle"] = TriangleMode;
-		modeMap["Polygon"] = PolygonMode;
-		modeMap["Pencil"] = PencilMode;
-		for (auto geom : mGeometry)
-		{
-			DrawingMode mode = modeMap[geom->name];
-			switch (mode) {
-			case LineMode:
-			{
-				Line* line = dynamic_cast<Line*>(geom);
-				line->setColor(m_shapeColor);
-
-				//glBegin(GL_LINES);
-				//glColor3f(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
-				//Point s = line->getStartpoint();
-				//glVertex2f(s.getX(), s.getY());
-				//Point e = line->getEndpoint();
-				//glVertex2f(e.getX(), e.getY());
-				//glEnd();
-				//update();
-				break;
-			}
-			case CircleMode:
-			{
-				Circle* circle = dynamic_cast<Circle*>(geom);
-				circle->setColor(m_shapeColor);
-				//const int num_segments = 100;
-				//glBegin(GL_LINE_LOOP);
-				//glColor3f(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
-				//for (int i = 0; i < num_segments; i++) {
-				//	float theta = 2.0f * M_PI * float(i) / float(num_segments);
-				//	float x = circle->getRadius() * cosf(theta) + circle->mCenterPoint.getX();
-				//	float y = circle->getRadius() * sinf(theta) + circle->mCenterPoint.getY();
-				//	glVertex2f(x, y);
-				//}
-				//glEnd();
-				//update();
-				break;
-			}
-			case QuadMode:
-			{
-				Quad* quad = dynamic_cast<Quad*>(geom);
-				quad->setColor(m_shapeColor);
-				//glBegin(GL_LINE_LOOP);
-				//glColor3f(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
-				//Point s = quad->getStartpoint();
-				//Point v2 = quad->getVertex2();
-				//Point v3 = quad->getVertex3();
-				//Point e = quad->getEndpoint();
-				//glVertex2f(s.getX(), s.getY());
-				//glVertex2f(v2.getX(), v2.getY());
-				//glVertex2f(e.getX(), e.getY());
-				//glVertex2f(v3.getX(), v3.getY());
-				//glEnd();
-				//update();
-				break;
-			}
-			case TriangleMode:
-			{
-				Triangle* triangle = dynamic_cast<Triangle*>(geom);
-				triangle->setColor(m_shapeColor);
-				//glBegin(GL_LINE_LOOP);
-				//glColor3f(m_shapeColor.redF(), m_shapeColor.greenF(), m_shapeColor.blueF());
-				//std::array<Point, 3> VertArray;
-				//triangle->getTriangle(VertArray);
-				//for (Point p : VertArray)
-				//	glVertex2f(p.getX(), p.getY());
-				//glEnd();
-				//update();
-				break;
-			}
-			default:
-				break;
-			}
-		}
-
-		//**********************************
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	}
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	m_program->bind();
 	for (int i = 0; i < mGeometryData.size(); i++)
 	{
@@ -282,12 +243,11 @@ void GLWidget::paintGL()
 		glBufferData(GL_ARRAY_BUFFER, mGeometryData[i].size() * sizeof(float), mGeometryData[i].data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
-
-		glDrawArrays(GL_LINES, 0, mGeometryData[i].size() / 2);
+		glLineWidth(1.0f);
+		glDrawArrays(GL_LINE_LOOP, 0, mGeometryData[i].size() / 6);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	update();
-	//**********************************
 
 }
 
@@ -318,13 +278,14 @@ std::vector<IGeometry*> GLWidget::getGeomList()
 
 void GLWidget::addGeomToTree()
 {
+	std::string text;
 	switch (currentMode)
 	{
 	case LineMode:
 	{
 		QTreeWidgetItem* item = itemLine;
 		QTreeWidgetItem* child = new QTreeWidgetItem();
-		std::string text = "Line " + std::to_string(lineCounter);
+		text = "Line " + std::to_string(lineCounter);
 		child->setText(0, text.c_str());
 		item->addChild(child);
 		break;
@@ -332,7 +293,7 @@ void GLWidget::addGeomToTree()
 	case QuadMode: {
 		QTreeWidgetItem* item = itemQuad;
 		QTreeWidgetItem* child = new QTreeWidgetItem();
-		std::string text = "Quad " + std::to_string(quadCounter);
+		text = "Quad " + std::to_string(quadCounter);
 		child->setText(0, text.c_str());
 		item->addChild(child);
 		break;
@@ -340,7 +301,7 @@ void GLWidget::addGeomToTree()
 	case CircleMode: {
 		QTreeWidgetItem* item = itemCircle;
 		QTreeWidgetItem* child = new QTreeWidgetItem();
-		std::string text = "Circle " + std::to_string(circleCounter);
+		text = "Circle " + std::to_string(circleCounter);
 		child->setText(0, text.c_str());
 		item->addChild(child);
 		break;
@@ -348,7 +309,7 @@ void GLWidget::addGeomToTree()
 	case TriangleMode: {
 		QTreeWidgetItem* item = itemTriangle;
 		QTreeWidgetItem* child = new QTreeWidgetItem();
-		std::string text = "Triangle " + std::to_string(triangleCounter);
+		text = "Triangle " + std::to_string(triangleCounter);
 		child->setText(0, text.c_str());
 		item->addChild(child);
 		break;
@@ -356,7 +317,7 @@ void GLWidget::addGeomToTree()
 	case PolygonMode: {
 		QTreeWidgetItem* item = itemPolygon;
 		QTreeWidgetItem* child = new QTreeWidgetItem();
-		std::string text = "Polygon " + std::to_string(polygonCounter);
+		text = "Polygon " + std::to_string(polygonCounter);
 		child->setText(0, text.c_str());
 		item->addChild(child);
 		break;
@@ -364,15 +325,16 @@ void GLWidget::addGeomToTree()
 	case PencilMode: {
 		QTreeWidgetItem* item = itemPencil;
 		QTreeWidgetItem* child = new QTreeWidgetItem();
-		std::string text = "Pencil " + std::to_string(pencilCounter);
+		text = "Pencil " + std::to_string(pencilCounter);
 		child->setText(0, text.c_str());
 		item->addChild(child);
 		break;
 	}
 	default:
+		text = "";
 		break;
 	}
-
+	geom->geomID = text;
 }
 
 void GLWidget::addTopLevelItems()

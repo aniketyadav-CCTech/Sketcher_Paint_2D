@@ -13,9 +13,9 @@ public:
 	void display() override;
 	std::string toString() override;
 
-	float getX();
-	float getY();
-	float getZ();
+	float getX() const;
+	float getY() const;
+	float getZ() const;
 	void setX(float _x);
 	void setY(float _y);
 	void setZ(float _z);

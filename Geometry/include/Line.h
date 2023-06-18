@@ -16,7 +16,7 @@ public:
 	void display() override;
     std::string toString() override;
 	void generateLine();
-	Point getEndpoint();
+	Point getEndPoint();
 	Point getStartpoint();
 	void setStartPoint(Point start);
 	void setEndPoint(Point end);

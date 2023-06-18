@@ -6,6 +6,7 @@
 #include <QTreeWidget>
 #include <QStringListModel>
 #include "IGeometry.h"
+#include <unordered_map>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,40 +24,34 @@ public:
 
 private slots:
 	void on_lineButton_clicked();
-
 	void on_circleButton_clicked();
-
     void on_rectangleButton_clicked();
-
     void on_triangleButton_clicked();
-
     void on_polygonButton_clicked();
-
     void on_pencilButton_clicked();
-
     void on_redColor_clicked();
-
     void on_blueColor_clicked();
-
     void on_greenColor_clicked();
-
     void on_blackColor_clicked();
-
     void on_yellowColor_clicked();
+    void on_cyanColor_clicked(); 
 
-    void on_cyanColor_clicked();
+    void on_treeWidget_itemActivated(QTreeWidgetItem *item, int column);
+
+public slots:
+	void geometryDrawn(IGeometry* geometry);
 
 protected:
-
 	void changeEvent(QEvent* event);
 
 private:
+	std::unordered_map<std::string, IGeometry*> geomMap;
 	//void updateListView();
 	//void addChild(QTreeWidgetItem* TopLevelItem, std::string text);
 
 
 private:
-	std::vector<IGeometry*> sketches;
+	//std::vector<IGeometry*> sketches;
 	Ui::MainWindow* ui;
 	QTreeWidget* treeWidget;
 	Color colorMode;

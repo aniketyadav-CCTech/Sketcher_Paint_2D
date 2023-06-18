@@ -11,13 +11,17 @@ struct DllExport Color {
 	Color(float r, float g, float b):r(r),g(g),b(b){}
 	float r; float g; float b;
 };
-
+enum BorderThickness
+{
+	regular = 1,
+	bold 
+};
 class DllExport IGeometry
 {
 private:
 
 public:
-	IGeometry() :name(""),color() {};
+	IGeometry() :name(""), color(), thickness(regular) {};
 	IGeometry(std::string _name) {
 		name = _name;
 	}
@@ -32,5 +36,6 @@ public:
 	std::string geomID;
 	std::string name;
 	Color color;
+	BorderThickness thickness;
 };
 #endif // !IGEOMETRY_H

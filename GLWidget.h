@@ -58,23 +58,57 @@ public:
 	void initializeGL() override;
 	void paintGL() override;
 	void addGeom(IGeometry* geometry);
+	/**
+	 * @brief Set current Drawing Mode
+	 * @param mode geometry type
+	*/
+	void setDrawingMode(DrawingMode mode);
+	/**
+	 * @brief Set current Color mode
+	 * @param color geometry color
+	*/
 	void setColorMode(Color color);
 	void drawGeom(IGeometry* geom);
-	void setDrawingMode(DrawingMode mode);
+
+private:
+	/**
+	 * @brief 
+	 * @return Returns the list of available IGeometries 
+	*/
 	std::vector<IGeometry*> getGeomList();
+	/**
+	 * @brief Utility function to list Geometry ID to QTreeWidget
+	*/
 	void addGeomToTree();
+	/**
+	 * @brief Utility function to add QTreeWidget Top Level Items
+	*/
 	void addTopLevelItems();
+	/**
+	 * @brief Utility function to add Ponint to std::Vector<float>
+	 * @param vect target std::vector<float>
+	 * @param point	
+	*/
+	void addPointToVector(std::vector<float>& vect, const Point& point);
+	/**
+	 * @brief Utility function to add Color to std::Vector<float>
+	 * @param vect target std::vector<float>
+	 * @param color 
+	*/
+	void addColorToVector(std::vector<float>& vect, const Color& color);
+
+protected:
+	void resizeEvent(QResizeEvent* event) override;
+
+signals:
+	void geometryDrawn(IGeometry* geometry);
 
 private slots:
 	void mousePressEvent(QMouseEvent* event);
 	void mouseReleaseEvent(QMouseEvent* event);
 
-protected:
-	void resizeEvent(QResizeEvent* event) override;
 
-public:
-	Point* startPoint;
-	Point* endPoint;
+
 private:
 	IGeometry* geom;
 	std::vector<IGeometry*> mGeometry;
@@ -99,6 +133,8 @@ private:
 	//*******************************
 
 public:
+	Point* startPoint;
+	Point* endPoint;
 	QTreeWidget* tree;
 	QTreeWidgetItem* itemLine;
 	QTreeWidgetItem* itemQuad;
