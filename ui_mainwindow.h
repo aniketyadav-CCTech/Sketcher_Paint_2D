@@ -181,10 +181,11 @@ public:
         treeWidget->setHeaderItem(__qtreewidgetitem);
         treeWidget->setObjectName("treeWidget");
         treeWidget->setGeometry(QRect(10, 70, 201, 521));
+        treeWidget->setSelectionMode(QAbstractItemView::MultiSelection);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1039, 22));
+        menubar->setGeometry(QRect(0, 0, 1039, 26));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName("menuFile");
         menuEdit = new QMenu(menubar);

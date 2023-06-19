@@ -278,13 +278,12 @@ void GLWidget::drawGeom(IGeometry* geom)
 	this->geom = geom;
 }
 
-void GLWidget::sethighlitedGeometryData(IGeometry* geom)
+void GLWidget::sethighlitedGeometryData(IGeometry* geometry)
 {
-	if (geom == nullptr)
-	{
+	if (geometry == nullptr)
 		mGeometryDataHighlited.clear();
-	}
-	mGeometryDataHighlited.push_back(geom->geomData);
+	else
+		mGeometryDataHighlited.push_back(geometry->geomData);
 }
 
 
@@ -373,10 +372,5 @@ void GLWidget::addTopLevelItems()
 	itemTriangle->setText(0, std::string("Triangle").c_str());
 	itemPolygon->setText(0, std::string("Polygon").c_str());
 	itemPencil->setText(0, std::string("Pencil").c_str());
-	tree->addTopLevelItem(itemLine);
-	tree->addTopLevelItem(itemQuad);
-	tree->addTopLevelItem(itemCircle);
-	tree->addTopLevelItem(itemTriangle);
-	tree->addTopLevelItem(itemPolygon);
-	tree->addTopLevelItem(itemPencil);
+	tree->addTopLevelItems({ itemLine, itemQuad, itemCircle, itemTriangle, itemPolygon, itemPencil });
 }

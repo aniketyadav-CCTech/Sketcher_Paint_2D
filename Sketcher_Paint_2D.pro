@@ -7,9 +7,9 @@ INCLUDEPATH += $$PWD
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
-LIBS += -L$$PWD/Geometry/common/lib -lglew32s
-LIBS += -L$$PWD/Geometry/common/lib -lglfw3
-LIBS += -L$$PWD/Geometry/common/lib -lopengl32
+#LIBS += -L$$PWD/Geometry/common/lib -lglew32s
+#LIBS += -L$$PWD/Geometry/common/lib -lglfw3
+#LIBS += -L$$PWD/Geometry/common/lib -lopengl32
 LIBS += -L$$PWD/x64/Debug -lGeometry
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.

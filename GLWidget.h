@@ -14,7 +14,6 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include <glm/glm.hpp>
 #include "Line.h"
 #include "Circle.h"
 #include "Triangle.h"

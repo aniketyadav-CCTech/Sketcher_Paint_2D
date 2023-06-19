@@ -36,9 +36,7 @@ private slots:
     void on_yellowColor_clicked();
     void on_cyanColor_clicked(); 
 
-    void on_treeWidget_itemActivated(QTreeWidgetItem *item, int column);
-
-    void on_treeWidget_itemSelectionChanged();
+    void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
 
 public slots:
 	void geometryDrawn(std::unordered_map<std::string, IGeometry*> geomMap);
@@ -48,8 +46,6 @@ protected:
 
 private:
 	std::unordered_map<std::string, IGeometry*> geomMap;
-	//void updateListView();
-	//void addChild(QTreeWidgetItem* TopLevelItem, std::string text);
 
 
 private:
