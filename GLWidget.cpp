@@ -63,7 +63,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 		float glX = (2.0f * event->x() / width()) - 1.0f;
 		float glY = 1.0f - (2.0f * event->y() / height());
 		endPoint = new Point(glX, glY, 0);
-
 		switch (currentMode)
 		{
 		case LineMode:
@@ -72,13 +71,11 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			line->setStartPoint(*startPoint);
 			line->setEndPoint(*endPoint);
 			line->setColor(m_shapeColor);
-			std::vector<float> lineVertices;
-			addPointToVector(lineVertices, line->getStartpoint());
-			addColorToVector(lineVertices, line->getColor());
-			addPointToVector(lineVertices, line->getEndPoint());
-			addColorToVector(lineVertices, line->getColor());
-			mGeometryData.push_back(lineVertices);
-			lineVertices.clear();
+			addPointToVector(line->geomData, line->getStartpoint());
+			addColorToVector(line->geomData, line->getColor());
+			addPointToVector(line->geomData, line->getEndPoint());
+			addColorToVector(line->geomData, line->getColor());
+			mGeometryData.push_back(line->geomData);
 			addGeom(geom);
 			lineCounter++;
 			break;
@@ -89,16 +86,15 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			quad->setStartPoint(*startPoint);
 			quad->setEndPoint(*endPoint);
 			quad->setColor(m_shapeColor);
-			std::vector<float> quadVerts;
-			addPointToVector(quadVerts, quad->getStartpoint());
-			addColorToVector(quadVerts, quad->getColor());
-			addPointToVector(quadVerts, quad->getVertex2());
-			addColorToVector(quadVerts, quad->getColor());
-			addPointToVector(quadVerts, quad->getEndpoint());
-			addColorToVector(quadVerts, quad->getColor());
-			addPointToVector(quadVerts, quad->getVertex3());
-			addColorToVector(quadVerts, quad->getColor());
-			mGeometryData.push_back(quadVerts);
+			addPointToVector(quad->geomData, quad->getStartpoint());
+			addColorToVector(quad->geomData, quad->getColor());
+			addPointToVector(quad->geomData, quad->getVertex2());
+			addColorToVector(quad->geomData, quad->getColor());
+			addPointToVector(quad->geomData, quad->getEndpoint());
+			addColorToVector(quad->geomData, quad->getColor());
+			addPointToVector(quad->geomData, quad->getVertex3());
+			addColorToVector(quad->geomData, quad->getColor());
+			mGeometryData.push_back(quad->geomData);
 			addGeom(geom);
 			quadCounter++;
 			break;
@@ -112,17 +108,15 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			circle->mRadius = std::sqrt(deltaX * deltaX + deltaY * deltaY);
 			circle->setColor(m_shapeColor);
 			const int num_segments = 30;
-			std::vector<float> circlePositions;
 			for (int i = 0; i < num_segments; i++) {
 				float theta = 2.0f * M_PI * float(i) / float(num_segments);
 				Point p;
 				p.setX(circle->getRadius() * cosf(theta) + circle->mCenterPoint.getX());
 				p.setY(circle->getRadius() * sinf(theta) + circle->mCenterPoint.getY());
-				addPointToVector(circlePositions, p);
-				addColorToVector(circlePositions, circle->getColor());
+				addPointToVector(circle->geomData, p);
+				addColorToVector(circle->geomData, circle->getColor());
 			}
-			mGeometryData.push_back(circlePositions);
-			circlePositions.clear();
+			mGeometryData.push_back(circle->geomData);
 			addGeom(geom);
 			circleCounter++;
 			break;
@@ -134,14 +128,12 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			triangle->setEndPoint(*endPoint);
 			triangle->setColor(m_shapeColor);
 			std::array<Point, 3> vertArray;
-			std::vector<float> triangleVerts;
 			triangle->getTriangle(vertArray);
 			for (auto point : vertArray) {
-				addPointToVector(triangleVerts, point);
-				addColorToVector(triangleVerts, triangle->getColor());
+				addPointToVector(triangle->geomData, point);
+				addColorToVector(triangle->geomData, triangle->getColor());
 			}
-			mGeometryData.push_back(triangleVerts);
-			triangleVerts.clear();
+			mGeometryData.push_back(triangle->geomData);
 			addGeom(geom);
 			triangleCounter++;
 			break;
@@ -160,8 +152,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			break;
 		}
 		addGeomToTree();
+		geomMap[geom->geomID] = geom;
 		paintGL();
-		emit geometryDrawn(geom);
+		emit geometryDrawn(geomMap);
 		update();
 	}
 	QOpenGLWidget::mousePressEvent(event);
@@ -196,7 +189,6 @@ void GLWidget::initializeGL()
 	initializeOpenGLFunctions();
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-	//**************************
 	QOpenGLShader* vertexShader = new QOpenGLShader(QOpenGLShader::Vertex);
 	if (vertexShader->compileSourceCode(vertexShaderSource)) {
 		qDebug() << "Vertex Shader Compilation Done";
@@ -223,29 +215,49 @@ void GLWidget::initializeGL()
 	m_highlightVao.create();
 	m_highlightVao.bind();
 	m_highlightVao.release();
-	//**************************
 }
 
 void GLWidget::paintGL()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	m_program->bind();
+
 	for (int i = 0; i < mGeometryData.size(); i++)
 	{
 		QOpenGLVertexArrayObject::Binder vaoBinder(&m_Vao);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_Vbo);
-		glBufferData(GL_ARRAY_BUFFER, mGeometryData[i].size() * sizeof(float), mGeometryData[i].data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, mGeometryData[i].size() * sizeof(float), mGeometryData[i].data(), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_Vbo_Col);
-		glBufferData(GL_ARRAY_BUFFER, mGeometryData[i].size() * sizeof(float), mGeometryData[i].data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, mGeometryData[i].size() * sizeof(float), mGeometryData[i].data(), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
-		glLineWidth(1.0f);
+
 		glDrawArrays(GL_LINE_LOOP, 0, mGeometryData[i].size() / 6);
+
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	for (int i = 0; i < mGeometryDataHighlited.size(); i++)
+	{
+		QOpenGLVertexArrayObject::Binder vaoBinder(&m_highlightVao);
+		glBindBuffer(GL_ARRAY_BUFFER, m_highlightVbo);
+		glBufferData(GL_ARRAY_BUFFER, mGeometryDataHighlited[i].size() * sizeof(float), mGeometryDataHighlited[i].data(), GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_highlightVbo_Col);
+		glBufferData(GL_ARRAY_BUFFER, mGeometryDataHighlited[i].size() * sizeof(float), mGeometryDataHighlited[i].data(), GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
+
+		glLineWidth(BOLD);
+		glDrawArrays(GL_LINE_LOOP, 0, mGeometryDataHighlited[i].size() / 6);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glLineWidth(REGULAR);
+		//mGeometryDataHighlited.clear();
 	}
 	update();
 
@@ -265,6 +277,16 @@ void GLWidget::drawGeom(IGeometry* geom)
 {
 	this->geom = geom;
 }
+
+void GLWidget::sethighlitedGeometryData(IGeometry* geom)
+{
+	if (geom == nullptr)
+	{
+		mGeometryDataHighlited.clear();
+	}
+	mGeometryDataHighlited.push_back(geom->geomData);
+}
+
 
 void GLWidget::setDrawingMode(DrawingMode mode)
 {

@@ -69,6 +69,7 @@ public:
 	*/
 	void setColorMode(Color color);
 	void drawGeom(IGeometry* geom);
+	void sethighlitedGeometryData(IGeometry* geom);
 
 private:
 	/**
@@ -97,11 +98,12 @@ private:
 	*/
 	void addColorToVector(std::vector<float>& vect, const Color& color);
 
+
 protected:
 	void resizeEvent(QResizeEvent* event) override;
 
 signals:
-	void geometryDrawn(IGeometry* geometry);
+	void geometryDrawn(std::unordered_map<std::string, IGeometry*> geomMap);
 
 private slots:
 	void mousePressEvent(QMouseEvent* event);
@@ -124,12 +126,12 @@ private:
 	//*******************************
 	GLuint m_posAttr;
 	GLuint m_colAttr;
-	GLuint m_matrixUniform;
 	QOpenGLShaderProgram* m_program;
 	GLuint m_Vbo,m_Vbo_Col;
-	GLuint m_highlightVbo;
+	GLuint m_highlightVbo, m_highlightVbo_Col;
 	QOpenGLVertexArrayObject m_Vao, m_highlightVao;
-	std::vector<std::vector<float>> mGeometryData;
+	std::vector<std::vector<float>> mGeometryData, mGeometryDataHighlited;
+	std::unordered_map<std::string, IGeometry*> geomMap;
 	//*******************************
 
 public:

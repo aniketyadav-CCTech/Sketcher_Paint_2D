@@ -5,23 +5,26 @@
 #include<iostream>
 #include<string>
 #include "Export.h"
+#include <vector>
 
 struct DllExport Color {
-	Color(): r(0), g(0), b(0) {}
-	Color(float r, float g, float b):r(r),g(g),b(b){}
+	Color() : r(0), g(0), b(0) {}
+	Color(float r, float g, float b) :r(r), g(g), b(b) {}
 	float r; float g; float b;
 };
 enum BorderThickness
 {
-	regular = 1,
-	bold 
+	REGULAR = 2,
+	BOLD = 4
 };
+
+class Point;
 class DllExport IGeometry
 {
 private:
 
 public:
-	IGeometry() :name(""), color(), thickness(regular) {};
+	IGeometry() :name(""), color() { thickness = REGULAR; };
 	IGeometry(std::string _name) {
 		name = _name;
 	}
@@ -32,10 +35,12 @@ public:
 	Color getColor();
 	void setColor(float r, float g, float b);
 	void setColor(Color _color);
+
 public:
 	std::string geomID;
 	std::string name;
 	Color color;
 	BorderThickness thickness;
+	std::vector<float> geomData;
 };
 #endif // !IGEOMETRY_H

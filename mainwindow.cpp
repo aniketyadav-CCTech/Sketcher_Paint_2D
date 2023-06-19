@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     glWidget->setAutoFillBackground(false);
 
     connect(glWidget, &GLWidget::geometryDrawn, this, &MainWindow::geometryDrawn);
-
+    //connect(treeWidget, &QTreeWidget::itemDeactivated, this, [this]() {});
     treeWidget = ui->treeWidget;
 }
 
@@ -23,9 +23,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::geometryDrawn(IGeometry* geom)
+void MainWindow::geometryDrawn(std::unordered_map<std::string, IGeometry*> geomMap)
 {
-    geomMap[geom->geomID] = geom;
+    this->geomMap = geomMap;
 }
 
 void MainWindow::changeEvent(QEvent* event)
@@ -115,10 +115,22 @@ void MainWindow::on_cyanColor_clicked()
 
 void MainWindow::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
 {
-    qDebug() << "Item : " << item->text(column);
+    //qDebug() << "Item : " << item->text(column);
     if(item->text(column) != "Line" && item->text(column) != "Quad" &&
         item->text(column) != "Circle" && item->text(column) != "Triangle" &&
         item->text(column) != "Polygon" && item->text(column) != "Pencil")
-    qDebug() << geomMap[item->text(column).toStdString()]->toString();
+    {
+        IGeometry* geom = geomMap[item->text(column).toStdString()];
+        qDebug() << geom->toString();
+        geom->thickness = BOLD;
+        glWidget->sethighlitedGeometryData(geom);
+        glWidget->update();
+    }
+}
+
+void MainWindow::on_treeWidget_itemSelectionChanged()
+{
+    qDebug() << "Selection changed" + treeWidget->selectedItems().front()->text(0).toStdString();
+    glWidget->sethighlitedGeometryData(nullptr);
 }
 

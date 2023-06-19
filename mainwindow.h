@@ -38,8 +38,10 @@ private slots:
 
     void on_treeWidget_itemActivated(QTreeWidgetItem *item, int column);
 
+    void on_treeWidget_itemSelectionChanged();
+
 public slots:
-	void geometryDrawn(IGeometry* geometry);
+	void geometryDrawn(std::unordered_map<std::string, IGeometry*> geomMap);
 
 protected:
 	void changeEvent(QEvent* event);
