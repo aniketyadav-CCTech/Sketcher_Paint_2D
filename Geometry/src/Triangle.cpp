@@ -82,11 +82,11 @@ void Triangle::setEndPoint(Point end)
 	float dy = end.getY() - centerPoint.getY();
 	float distance = sqrt(dx * dx + dy * dy);
 
-	float sideLength = 2.0 * distance / sqrt(3.0);
+	float sideLength = (float)(2.0 * distance / sqrt(3.0));
 
 	float angle = atan2(end.getY() - centerPoint.getY(), end.getX() - centerPoint.getX());
-	float angle1 = angle + 2.0 * M_PI / 3.0;
-	float angle2 = angle - 2.0 * M_PI / 3.0;
+	float angle1 = (float)(angle + 2.0 * M_PI / 3.0);
+	float angle2 = (float)(angle - 2.0 * M_PI / 3.0);
 
 	mP1.setX(centerPoint.getX() + sideLength * cos(angle2));
 	mP1.setY(centerPoint.getY() + sideLength * sin(angle2));

@@ -117,16 +117,9 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
 {
 	if (item->parent())
 	{
-		if (treeWidget->selectedItems().contains(item)) {
-			IGeometry* geom = geomMap[item->text(column).toStdString()];
-			geom->thickness = BOLD;
-			glWidget->sethighlitedGeometryData(geom);
-			glWidget->update();
-		}
-		else
-		{
-			glWidget->sethighlitedGeometryData(nullptr);
-		}
+		IGeometry* geom = geomMap[item->text(column).toStdString()];
+		geom->thickness = (treeWidget->selectedItems().contains(item)) ? BOLD : REGULAR;
+		glWidget->update();
 	}
 }
 

@@ -18,7 +18,7 @@ public:
 	void display() override;
 	std::string toString() override;
 	
-	float getRadius() { return mRadius; };
+	float getRadius() { return (float)mRadius; };
 
 };
 #endif // !CIRCLE_H

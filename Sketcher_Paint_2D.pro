@@ -2,7 +2,6 @@ QT       += core gui
 QT       += opengl
 QT       += openglwidgets
 INCLUDEPATH += $$PWD/Geometry/include
-INCLUDEPATH += $$PWD/Geometry/common/include
 INCLUDEPATH += $$PWD
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
