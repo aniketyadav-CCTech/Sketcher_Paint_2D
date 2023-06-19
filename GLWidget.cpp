@@ -75,9 +75,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			addColorToVector(line->geomData, line->getColor());
 			addPointToVector(line->geomData, line->getEndPoint());
 			addColorToVector(line->geomData, line->getColor());
-			mGeometryData.push_back(line->geomData);
-			addGeom(geom);
 			lineCounter++;
+			addGeomToTree();
+			mGeometryData[line->geomID] = line->geomData;
+			addGeom(geom);
 			break;
 		}
 		case QuadMode:
@@ -94,9 +95,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			addColorToVector(quad->geomData, quad->getColor());
 			addPointToVector(quad->geomData, quad->getVertex3());
 			addColorToVector(quad->geomData, quad->getColor());
-			mGeometryData.push_back(quad->geomData);
-			addGeom(geom);
 			quadCounter++;
+			addGeomToTree();
+			mGeometryData[quad->geomID] = quad->geomData;
+			addGeom(geom);
 			break;
 		}
 		case CircleMode:
@@ -116,9 +118,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 				addPointToVector(circle->geomData, p);
 				addColorToVector(circle->geomData, circle->getColor());
 			}
-			mGeometryData.push_back(circle->geomData);
-			addGeom(geom);
 			circleCounter++;
+			addGeomToTree();
+			mGeometryData[circle->geomID] = circle->geomData;
+			addGeom(geom);
 			break;
 		}
 		case TriangleMode:
@@ -133,25 +136,27 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 				addPointToVector(triangle->geomData, point);
 				addColorToVector(triangle->geomData, triangle->getColor());
 			}
-			mGeometryData.push_back(triangle->geomData);
-			addGeom(geom);
 			triangleCounter++;
+			addGeomToTree();
+			mGeometryData[triangle->geomID] = triangle->geomData;
+			addGeom(geom);
 			break;
 		}
 		case PolygonMode:
 		{
 			polygonCounter++;
+			addGeomToTree();
 			break;
 		}
 		case PencilMode:
 		{
 			pencilCounter++;
+			addGeomToTree();
 			break;
 		}
 		default:
 			break;
 		}
-		addGeomToTree();
 		geomMap[geom->geomID] = geom;
 		paintGL();
 		emit geometryDrawn(geomMap);
@@ -208,13 +213,10 @@ void GLWidget::initializeGL()
 
 	glGenBuffers(1, &m_Vbo);
 	glGenBuffers(1, &m_Vbo_Col);
-	glGenBuffers(1, &m_highlightVbo);
 	m_Vao.create();
 	m_Vao.bind();
 	m_Vao.release();
-	m_highlightVao.create();
-	m_highlightVao.bind();
-	m_highlightVao.release();
+	glLineWidth(REGULAR);
 }
 
 void GLWidget::paintGL()
@@ -222,42 +224,26 @@ void GLWidget::paintGL()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	m_program->bind();
 
-	for (int i = 0; i < mGeometryData.size(); i++)
+	for (auto geomItem : mGeometryData)
 	{
+		IGeometry* geometry = geomMap[geomItem.first];
+		std::vector<float> geometryData = geomItem.second;
+
 		QOpenGLVertexArrayObject::Binder vaoBinder(&m_Vao);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_Vbo);
-		glBufferData(GL_ARRAY_BUFFER, mGeometryData[i].size() * sizeof(float), mGeometryData[i].data(), GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, geometryData.size() * sizeof(float), geometryData.data(), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_Vbo_Col);
-		glBufferData(GL_ARRAY_BUFFER, mGeometryData[i].size() * sizeof(float), mGeometryData[i].data(), GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, geometryData.size() * sizeof(float), geometryData.data(), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
-
-		glDrawArrays(GL_LINE_LOOP, 0, mGeometryData[i].size() / 6);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-	for (int i = 0; i < mGeometryDataHighlited.size(); i++)
-	{
-		QOpenGLVertexArrayObject::Binder vaoBinder(&m_highlightVao);
-		glBindBuffer(GL_ARRAY_BUFFER, m_highlightVbo);
-		glBufferData(GL_ARRAY_BUFFER, mGeometryDataHighlited[i].size() * sizeof(float), mGeometryDataHighlited[i].data(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-		glEnableVertexAttribArray(0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, m_highlightVbo_Col);
-		glBufferData(GL_ARRAY_BUFFER, mGeometryDataHighlited[i].size() * sizeof(float), mGeometryDataHighlited[i].data(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
-
-		glLineWidth(BOLD);
-		glDrawArrays(GL_LINE_LOOP, 0, mGeometryDataHighlited[i].size() / 6);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glLineWidth(geometry->thickness);
+		glDrawArrays(GL_LINE_LOOP, 0, GLsizei(geometryData.size() / 6));
 		glLineWidth(REGULAR);
-		//mGeometryDataHighlited.clear();
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	update();
 
@@ -277,15 +263,6 @@ void GLWidget::drawGeom(IGeometry* geom)
 {
 	this->geom = geom;
 }
-
-void GLWidget::sethighlitedGeometryData(IGeometry* geometry)
-{
-	if (geometry == nullptr)
-		mGeometryDataHighlited.clear();
-	else
-		mGeometryDataHighlited.push_back(geometry->geomData);
-}
-
 
 void GLWidget::setDrawingMode(DrawingMode mode)
 {

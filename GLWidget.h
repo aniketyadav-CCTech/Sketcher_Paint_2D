@@ -14,6 +14,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
 #include "Line.h"
 #include "Circle.h"
 #include "Triangle.h"
@@ -68,7 +69,6 @@ public:
 	*/
 	void setColorMode(Color color);
 	void drawGeom(IGeometry* geom);
-	void sethighlitedGeometryData(IGeometry* geom);
 
 private:
 	/**
@@ -127,9 +127,8 @@ private:
 	GLuint m_colAttr;
 	QOpenGLShaderProgram* m_program;
 	GLuint m_Vbo,m_Vbo_Col;
-	GLuint m_highlightVbo, m_highlightVbo_Col;
-	QOpenGLVertexArrayObject m_Vao, m_highlightVao;
-	std::vector<std::vector<float>> mGeometryData, mGeometryDataHighlited;
+	QOpenGLVertexArrayObject m_Vao;
+	std::unordered_map<std::string ,std::vector<float>> mGeometryData;
 	std::unordered_map<std::string, IGeometry*> geomMap;
 	//*******************************
 
