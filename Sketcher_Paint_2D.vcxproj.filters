@@ -56,6 +56,12 @@
     <ClCompile Include="mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Intersection.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="treewidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GLWidget.h">
@@ -63,6 +69,9 @@
     </QtMoc>
     <QtMoc Include="mainwindow.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="treewidget.h">
+      <Filter>Generated Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -118,5 +127,10 @@
     <None Include="Resources\icons\undo.png">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Intersection.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

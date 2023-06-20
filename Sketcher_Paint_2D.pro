@@ -18,10 +18,12 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     GLWidget.cpp \
+    treewidget.cpp
 
 HEADERS += \
     mainwindow.h \
     GLWidget.h \
+    treewidget.h
 
 FORMS += \
     mainwindow.ui \
