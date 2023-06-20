@@ -1,6 +1,8 @@
 #include "Quad.h"
 #include "Quad.h"
 
+using namespace Geometry;
+
 Quad::Quad() :IGeometry("Quad")
 {
 }

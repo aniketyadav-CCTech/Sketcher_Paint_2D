@@ -1,5 +1,7 @@
 #include "Triangle.h"
 
+using namespace Geometry;
+
 #define M_PI 3.14159
 
 Triangle::Triangle() :IGeometry("Triangle")

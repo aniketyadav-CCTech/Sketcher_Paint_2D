@@ -1,5 +1,8 @@
 #include "Point.h"
+#include "Point.h"
 #include <sstream>
+
+using namespace Geometry;
 
 Point::Point() :IGeometry("Point")
 {
@@ -34,6 +37,16 @@ std::string Point::toString()
     return ss.str();
 }
 
+void Point::setGeomData()
+{
+    geomData.push_back(x);
+    geomData.push_back(y);
+    geomData.push_back(z);
+    geomData.push_back(color.r);
+    geomData.push_back(color.g);
+    geomData.push_back(color.b);
+}
+
 void Point::setX(float _x) { x = _x; }
 void Point::setY(float _y) { y = _y; }
 void Point::setZ(float _z) { z = _z; }
@@ -41,7 +54,7 @@ float Point::getX() const { return x; }
 float Point::getY() const { return y; }
 float Point::getZ() const { return z; }
 
-std::istream& operator>>(std::istream& is, Point& point) {
+std::istream& Geometry::operator>>(std::istream& is, Point& point) {
     float x, y, z;
     is >> x >> y >> z;
     point.setX(x);

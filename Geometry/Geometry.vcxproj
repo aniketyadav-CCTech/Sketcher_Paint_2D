@@ -35,6 +35,7 @@
     <ClInclude Include="include\IGeometry.h" />
     <ClInclude Include="include\Line.h" />
     <ClInclude Include="include\Point.h" />
+    <ClInclude Include="include\Polygon.h" />
     <ClInclude Include="include\Quad.h" />
     <ClInclude Include="include\Triangle.h" />
   </ItemGroup>
@@ -43,6 +44,7 @@
     <ClCompile Include="src\IGeometry.cpp" />
     <ClCompile Include="src\Line.cpp" />
     <ClCompile Include="src\Point.cpp" />
+    <ClCompile Include="src\Polygon.cpp" />
     <ClCompile Include="src\Quad.cpp" />
     <ClCompile Include="src\Triangle.cpp" />
   </ItemGroup>

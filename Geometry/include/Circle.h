@@ -5,20 +5,22 @@
 #include "IGeometry.h"
 #include "Point.h"
 
-
-class DllExport Circle final: public IGeometry
+namespace Geometry
 {
-public:
-	Point mCenterPoint;
-	double mRadius;
-	Circle();
-	Circle(Point centerPoint, float radius);
+	class DllExport Circle final : public IGeometry
+	{
+	public:
+		Point mCenterPoint;
+		double mRadius;
+		Circle();
+		Circle(Point centerPoint, float radius);
 
-	void input() override;
-	void display() override;
-	std::string toString() override;
-	
-	float getRadius() { return (float)mRadius; };
+		void input() override;
+		void display() override;
+		std::string toString() override;
 
-};
+		float getRadius() { return (float)mRadius; };
+
+	};
+}
 #endif // !CIRCLE_H

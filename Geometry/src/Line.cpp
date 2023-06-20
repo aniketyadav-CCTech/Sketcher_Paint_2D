@@ -2,6 +2,7 @@
 #include "Line.h"
 #include "Line.h"
 
+using namespace Geometry;
 
 Line::Line():IGeometry("Line")
 {
@@ -48,7 +49,7 @@ void Line::generateLine()
 {
 }
 
-Point Line::getEndPoint()
+Point Line::getEndPoint() const
 {
 	return endpoint1;
 }
@@ -63,7 +64,7 @@ void Line::setEndPoint(Point end)
 	endpoint2 = end;
 }
 
-Point Line::getStartpoint()
+Point Line::getStartPoint() const
 {
 	return endpoint2;
 }

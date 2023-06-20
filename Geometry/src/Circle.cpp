@@ -2,6 +2,8 @@
 #include "Circle.h"
 #include <sstream>
 
+using namespace Geometry;
+
 #define M_PI 3.14159
 
 Circle::Circle() :IGeometry("Circle"), mCenterPoint(0, 0, 0), mRadius(0)
