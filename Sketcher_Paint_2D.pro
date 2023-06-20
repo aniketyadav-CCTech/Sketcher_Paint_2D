@@ -17,11 +17,11 @@ LIBS += -L$$PWD/x64/Debug -lGeometry
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    GLWidget.cpp
+    GLWidget.cpp \
 
 HEADERS += \
     mainwindow.h \
-    GLWidget.h
+    GLWidget.h \
 
 FORMS += \
     mainwindow.ui \

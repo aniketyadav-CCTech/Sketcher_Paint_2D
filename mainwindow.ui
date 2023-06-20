@@ -159,7 +159,7 @@
    <widget class="QGroupBox" name="colorButtons">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>820</x>
       <y>10</y>
       <width>211</width>
       <height>51</height>

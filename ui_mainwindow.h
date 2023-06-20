@@ -143,7 +143,7 @@ public:
         rectangleButton->setIcon(icon11);
         colorButtons = new QGroupBox(centralwidget);
         colorButtons->setObjectName("colorButtons");
-        colorButtons->setGeometry(QRect(220, 10, 211, 51));
+        colorButtons->setGeometry(QRect(820, 10, 211, 51));
         colorButtons->setStyleSheet(QString::fromUtf8("background-color: white;"));
         greenColor = new QPushButton(colorButtons);
         greenColor->setObjectName("greenColor");
