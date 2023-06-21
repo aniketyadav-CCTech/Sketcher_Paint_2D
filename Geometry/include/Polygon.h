@@ -21,6 +21,7 @@ namespace Geometry
 		size_t getEdgeCount();
 		void setCenterPoint(Point* point);
 		void setCenterToVertexDistance(float distance);
+		std::vector<Geometry::Line*> getEdgeList();
 
 	private:
 		std::vector<Line*> edges;

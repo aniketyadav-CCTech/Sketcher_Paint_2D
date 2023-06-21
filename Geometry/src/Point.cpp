@@ -4,7 +4,7 @@
 
 using namespace Geometry;
 
-Point::Point() :IGeometry("Point")
+Point::Point() :IGeometry(PointType)
 {
     x = 0; y = 0; z = 0;
 }
@@ -12,7 +12,7 @@ Point::Point() :IGeometry("Point")
 Point::Point(float _x, float _y, float _z) :
     x(_x), y(_y), z(_z)
 {
-    name = "Point";
+    type = PointType;
 }
 
 Point::~Point()
@@ -27,13 +27,13 @@ void Point::input()
 
 void Point::display()
 {
-    std::cout << name << " : " << this->x << "  " << this->y << "  " << this->z << std::endl;
+    std::cout << geometryNames[type] << " : " << this->x << "  " << this->y << "  " << this->z << std::endl;
 }
 
 std::string Point::toString()
 {
     std::stringstream ss;
-    ss << name << " : " << this->x << "  " << this->y << "  " << this->z;
+    ss << geometryNames[type] << " : " << this->x << "  " << this->y << "  " << this->z;
     return ss.str();
 }
 

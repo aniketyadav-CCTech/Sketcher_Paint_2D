@@ -1,9 +1,10 @@
 #include "Quad.h"
 #include "Quad.h"
+#include "Quad.h"
 
 using namespace Geometry;
 
-Quad::Quad() :IGeometry("Quad")
+Quad::Quad() :IGeometry(QuadType)
 {
 }
 
@@ -12,7 +13,7 @@ Quad::Quad(Point startPoint, Point endPoint)
 {
 	m_Vertex2 = Point(startPoint.getY(), endPoint.getX(), 0);
 	m_Vertex3 = Point(startPoint.getX(), endPoint.getY(), 0);
-	name = "Quad";
+	type = QuadType;
 }
 
 Quad::~Quad()
@@ -33,7 +34,7 @@ void Quad::display()
 std::string Quad::toString()
 {
 	std::stringstream returnStr;
-	returnStr << name << " : ("
+	returnStr << geometryNames[type] << " : ("
 		<< this->m_StartPoint.getX() << ", "
 		<< this->m_StartPoint.getY() << ", "
 		<< this->m_StartPoint.getZ() << "), ("
@@ -85,6 +86,16 @@ void Quad::setEndPoint(Point end)
 	m_Vertex2.setX(end.getX());
 	m_Vertex3.setY(end.getY());
 	m_EndPoint = end;
+}
+
+std::vector<Geometry::Line*> Geometry::Quad::getEdgeList()
+{
+	return std::vector<Geometry::Line*> {
+		new Line(m_StartPoint,m_Vertex2),
+		new Line(m_Vertex2, m_EndPoint ),
+		new Line(m_EndPoint,m_Vertex3),
+		new Line(m_Vertex3, m_StartPoint)
+	};
 }
 
 

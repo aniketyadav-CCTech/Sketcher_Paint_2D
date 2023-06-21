@@ -53,13 +53,13 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>x64/Debug/</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>debug\</IntDir>
     <TargetName>Sketcher_Paint_2D</TargetName>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>x64/Debug/</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>release\</IntDir>
     <TargetName>Sketcher_Paint_2D</TargetName>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -212,11 +212,11 @@
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
-    <ClCompile Include="treewidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GLWidget.h">
     </QtMoc>
+    <ClInclude Include="Intersection.h" />
     <QtMoc Include="mainwindow.h">
     </QtMoc>
   </ItemGroup>
@@ -257,10 +257,6 @@
     <None Include="Resources\icons\save.png" />
     <None Include="Resources\icons\triangle.png" />
     <None Include="Resources\icons\undo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Intersection.h" />
-    <QtMoc Include="treewidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

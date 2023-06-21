@@ -49,14 +49,14 @@ bool Intersection::intersection(const Geometry::Line& line1, const Geometry::Lin
 	return false;
 }
 
-std::vector<Geometry::Point*> Intersection::getLineIntersectionPoints(const std::vector<Geometry::Line*>& lines)
+std::vector<Geometry::Point*> Intersection::getLineIntersectionPoints(const std::vector<Geometry::IGeometry*>& lines)
 {
 	std::vector<Geometry::Point*> intersectionPoints;
 	for (size_t i = 0; i < lines.size() - 1; i++) {
 		for (size_t j = i + 1; j < lines.size(); j++) {
 			Geometry::Point* intersectionP = new Geometry::Point();
 			intersectionP->geomID = "Intersection " + std::to_string(++intersectionCounter);
-			if (intersection(*lines[i], *lines[j], *intersectionP))
+			if (intersection(*dynamic_cast<Geometry::Line*>(lines[i]), *dynamic_cast<Geometry::Line*>(lines[j]), *intersectionP))
 			{
 				intersectionP->setGeomData();
 				intersectionPoints.push_back(intersectionP);

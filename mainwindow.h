@@ -38,8 +38,7 @@ private slots:
 	void on_cyanColor_clicked();
 
 	void on_treeWidget_itemClicked(QTreeWidgetItem* item, int column);
-
-    //void on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column);
+	void on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column);
 
 public slots:
 	void geometryDrawn(std::unordered_map<std::string, Geometry::IGeometry*> geomMap);
@@ -47,18 +46,13 @@ public slots:
 protected:
 	void changeEvent(QEvent* event);
 
-private:
+public:
 	std::unordered_map<std::string, Geometry::IGeometry*> geomMap;
-
-
-private:
 	Ui::MainWindow* ui;
 	QTreeWidget* treeWidget;
 	Geometry::Color colorMode;
 	Intersection* intersection;
-	std::vector<Geometry::Line*> lineList;
-
-protected:
 	GLWidget* glWidget;
+
 };
 #endif // MAINWINDOW_H

@@ -8,6 +8,9 @@
 #include <vector>
 
 namespace Geometry {
+
+	enum GeometryType { LineType, QuadType, CircleType, TriangleType, PolygonType, PointType };
+
 	struct DllExport Color {
 		Color() : r(0), g(0), b(0) {}
 		Color(float r, float g, float b) :r(r), g(g), b(b) {}
@@ -21,12 +24,11 @@ namespace Geometry {
 
 	class DllExport IGeometry
 	{
-	private:
-
 	public:
-		IGeometry() :name(""), color() { thickness = REGULAR; };
-		IGeometry(std::string _name) {
-			name = _name;
+		IGeometry() :type(LineType), color() { thickness = REGULAR; };
+		IGeometry(GeometryType _type) {
+			thickness = REGULAR;
+			type = _type;
 		}
 		virtual void input() = 0;
 		virtual void display() = 0;
@@ -38,10 +40,20 @@ namespace Geometry {
 
 	public:
 		std::string geomID;
-		std::string name;
-		Color color;
+		GeometryType type;
 		BorderThickness thickness;
 		std::vector<float> geomData;
+
+	protected:
+		Color color;
+		std::string geometryNames[6] = {
+		"LineType",
+		"QuadType",
+		"CircleType",
+		"TriangleType",
+		"PolygonType",
+		"PointType"
+		};
 	};
 }
 #endif // !IGEOMETRY_H

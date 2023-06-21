@@ -4,20 +4,27 @@
 
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent),
-	ui(new Ui::MainWindow), colorMode(0.0f, 0.0f, 0.0f)
+	ui(new Ui::MainWindow), colorMode(0.0f, 0.0f, 0.0f), treeWidget(nullptr)
 {
 	ui->setupUi(this);
 
-	glWidget = new GLWidget(this);
-	glWidget->setGeometry(QRect(220, 90, 791, 511));
-	glWidget->setMinimumSize(QSize(0, 0));
-	glWidget->setAutoFillBackground(false);
+	treeWidget = new QTreeWidget(centralWidget());
+	treeWidget->setObjectName("treeWidget");
+	treeWidget->setGeometry(QRect(12, 70, 199, 521));
+	treeWidget->setColumnCount(1);
+	treeWidget->setSelectionMode(QAbstractItemView::MultiSelection);
+	treeWidget->headerItem()->setText(0, "List of Geometries");
+
+	glWidget = new GLWidget(centralWidget());
+	glWidget->setObjectName("glWidget");
+	glWidget->setGeometry(QRect(220, 70, 1300, 1300));
+	glWidget->setCursor(Qt::CrossCursor);
+
+	intersection = new Intersection();
 
 	connect(glWidget, &GLWidget::geometryDrawn, this, &MainWindow::geometryDrawn);
-	//connect(treeWidget, &QTreeWidget::itemDeactivated, this, [this]() {});
-	treeWidget = ui->treeWidget;
-	connect(treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::on_treeWidget_itemClicked);
-	intersection = new Intersection();
+	connect(treeWidget, &QTreeWidget::itemClicked, this, &MainWindow::on_treeWidget_itemClicked);
+	connect(treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::on_treeWidget_itemDoubleClicked);
 }
 
 MainWindow::~MainWindow()
@@ -33,12 +40,12 @@ void MainWindow::geometryDrawn(std::unordered_map<std::string, Geometry::IGeomet
 void MainWindow::changeEvent(QEvent* event)
 {
 	if (event->type() == QEvent::WindowStateChange) {
-		if (isMaximized()) {
-			QSize windowSize = size();
-			glWidget->resize(windowSize.width() - 250, windowSize.height() - 150);
-		}
+		QSize windowSize = size(); 
+		glWidget->setGeometry(QRect(220, 70, 1300, 1300));
+		QGroupBox* colorButtonBox = centralWidget()->findChild<QGroupBox*>("colorButtons");
+		colorButtonBox->setGeometry(QRect(centralWidget()->width() - 221, 10, 211, 51));
+		treeWidget->setGeometry(QRect(12, 70, 199, centralWidget()->height() - 70));
 	}
-
 	QMainWindow::changeEvent(event);
 }
 
@@ -119,24 +126,56 @@ void MainWindow::on_cyanColor_clicked()
 
 }
 
-void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
+void MainWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column)
 {
-	if(!item->parent() && treeWidget->selectedItems().size() != 0)
-		treeWidget->selectedItems().pop_back();
-	
 	if (treeWidget->selectedItems().size() != 0)
 		if (item->parent())
 		{
-			Geometry::IGeometry* geom = geomMap[item->text(column).toStdString()];
-			geom->thickness = (treeWidget->selectedItems().contains(item)) ? Geometry::BOLD : Geometry::REGULAR;
-			glWidget->paintGL();
-
-			lineList.clear();
+			std::vector<Geometry::IGeometry*> lineList;
 			for (auto item : treeWidget->selectedItems())
 			{
-				Geometry::IGeometry* geom = geomMap[item->text(column).toStdString()];
-				if (geom->geomID._Starts_with("Line ")) {
-					lineList.push_back(dynamic_cast<Geometry::Line*>(geom));
+				if (item->parent()) {
+					Geometry::IGeometry* geom = geomMap[item->text(column).toStdString()];
+					switch (geom->type) {
+					case Geometry::LineType:
+					{
+						lineList.push_back(dynamic_cast<Geometry::Line*>(geom));
+						break;
+					}
+					case Geometry::QuadType:
+					{
+						Geometry::Quad* quad = dynamic_cast<Geometry::Quad*>(geom);
+						for (auto line : quad->getEdgeList())
+							lineList.push_back(line);
+						break;
+					}
+					break;
+					case Geometry::CircleType:
+					{
+						Geometry::Circle* circle = dynamic_cast<Geometry::Circle*>(geom);
+						for (auto line : circle->getLines())
+							lineList.push_back(line);
+						break;
+					}
+					case Geometry::TriangleType:
+					{
+						Geometry::Triangle* triangle = dynamic_cast<Geometry::Triangle*>(geom);
+						for (auto line : triangle->getEdgeList())
+							lineList.push_back(line);
+						break;
+					}
+					case Geometry::PolygonType:
+					{
+						Geometry::Polygon* polygon = dynamic_cast<Geometry::Polygon*>(geom);
+						for (auto line : polygon->getEdgeList())
+							lineList.push_back(line);
+						break;
+					}
+					case Geometry::PointType:
+						break;
+					default:
+						break;
+					}
 				}
 			}
 			std::vector<Geometry::Point*> intersectionPoints = intersection->getLineIntersectionPoints(lineList);
@@ -152,18 +191,13 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
 		}
 }
 
-
-//void MainWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column)
-//{
-//	/*if (treeWidget->selectedItems().size() != 0) {
-//		qDebug() << "(Double Click)Selected items : ";
-//		for (auto item : treeWidget->selectedItems())
-//			qDebug() << item->text(0).toStdString();
-//		qDebug() << "}";
-//	}*/
-//	/*if (item->parent())
-//	{
-//
-//	}*/
-//}
+void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
+{
+	if (item->parent())
+	{
+		Geometry::IGeometry* geom = geomMap[item->text(0).toStdString()];
+		geom->thickness = (treeWidget->selectedItems().contains(item)) ? Geometry::BOLD : Geometry::REGULAR;
+		glWidget->paintGL();
+	}
+}
 

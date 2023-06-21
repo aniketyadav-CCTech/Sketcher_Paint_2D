@@ -34,6 +34,7 @@ static const char* vertexShaderSource =
 "out vec4 color_out;\n"
 "void main()\n"
 "{\n"
+"	 gl_PointSize = 7;\n"
 "    gl_Position = vec4(position, 1.0);\n"
 "    color_out = vec4(color, 1.0);\n"
 "}";

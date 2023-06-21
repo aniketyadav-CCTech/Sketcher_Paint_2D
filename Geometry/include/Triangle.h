@@ -3,6 +3,7 @@
 #include "Point.h"
 #include <sstream>
 #include <array>
+#include "Line.h"
 
 namespace Geometry
 {
@@ -20,6 +21,7 @@ namespace Geometry
 		Point getEndpoint();
 		void setStartPoint(Point start);
 		void setEndPoint(Point end);
+		std::vector<Geometry::Line*> getEdgeList();
 
 	private:
 		Point centerPoint;

@@ -3,19 +3,20 @@
 #include <QScreen>
 #include <algorithm>
 #include <unordered_map>
+#include <treewidget.h>
 
 
 GLWidget::GLWidget(QWidget* parent)
 	: QOpenGLWidget(parent),
-	startPoint(nullptr),
-	endPoint(nullptr),
+	currentMode(LineMode),
 	lineCounter(0),
 	quadCounter(0),
 	circleCounter(0),
 	triangleCounter(0),
 	polygonCounter(0),
 	pencilCounter(0),
-	currentMode(LineMode)
+	startPoint(nullptr),
+	endPoint(nullptr)
 {
 	tree = parent->findChild<QTreeWidget*>("treeWidget");
 	addTopLevelItems();
@@ -61,9 +62,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (event->button() == Qt::LeftButton) {
 
-		QPoint mousePos = event->pos();
-		float glX = (2.0f * event->x() / width()) - 1.0f;
-		float glY = 1.0f - (2.0f * event->y() / height());
+		float glX = (2.0f * event->position().x() / width()) - 1.0f;
+		float glY = 1.0f - (2.0f * event->position().y() / height());
 		endPoint = new Geometry::Point(glX, glY, 0);
 		switch (currentMode)
 		{
@@ -114,10 +114,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			const int num_segments = 30;
 			for (int i = 0; i < num_segments; i++) {
 				float theta = 2.0f * M_PI * float(i) / float(num_segments);
-				Geometry::Point p;
-				p.setX(circle->getRadius() * cosf(theta) + circle->mCenterPoint.getX());
-				p.setY(circle->getRadius() * sinf(theta) + circle->mCenterPoint.getY());
-				addPointToVector(circle->geomData, p);
+				Geometry::Point* p = new Geometry::Point();
+				p->setX(circle->getRadius() * cosf(theta) + circle->mCenterPoint.getX());
+				p->setY(circle->getRadius() * sinf(theta) + circle->mCenterPoint.getY());
+				addPointToVector(circle->geomData, *p);
 				addColorToVector(circle->geomData, circle->getColor());
 			}
 			circleCounter++;
@@ -155,10 +155,11 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			const int num_segments = 5;
 			for (int i = 0; i < num_segments; i++) {
 				float theta = 2.0f * M_PI * float(i) / float(num_segments);
-				Geometry::Point p;
-				p.setX(distance * cosf(theta) + startPoint->getX());
-				p.setY(distance * sinf(theta) + startPoint->getY());
-				addPointToVector(polygon->geomData, p);
+				Geometry::Point* p = new Geometry::Point();
+				p->setX(distance * cosf(theta) + startPoint->getX());
+				p->setY(distance * sinf(theta) + startPoint->getY());
+				polygon->addVertex(p);
+				addPointToVector(polygon->geomData, *p);
 				addColorToVector(polygon->geomData, polygon->getColor());
 			}
 			polygonCounter++;
@@ -170,8 +171,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 		case PencilMode:
 		{
 			Geometry::Point* point = dynamic_cast<Geometry::Point*>(geom);
-			point->setX(0);
-			point->setY(0);
+			point->setX(endPoint->getX());
+			point->setY(endPoint->getY());
 			point->setZ(0);
 			point->setColor(m_shapeColor);
 			addPointToVector(point->geomData, *point);
@@ -179,6 +180,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			pencilCounter++;
 			addGeomToTree();
 			mGeometryData[point->geomID] = point->geomData;
+			addGeom(geom);
 			break;
 		}
 		default:
@@ -244,6 +246,7 @@ void GLWidget::initializeGL()
 	m_Vao.bind();
 	m_Vao.release();
 	glLineWidth(Geometry::REGULAR);
+	glEnable(GL_PROGRAM_POINT_SIZE);
 }
 
 void GLWidget::paintGL()
@@ -268,12 +271,9 @@ void GLWidget::paintGL()
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 
-		if (geometry->geomID._Starts_with("Intersection"))
+		if (geometry->type == Geometry::PointType)
 		{
-			glPointSize(7.0f);
 			glDrawArrays(GL_POINTS, 0, GLsizei(geometryData.size() / 6));
-			glPointSize(1.0f);
-
 		}
 		else {
 			glLineWidth(geometry->thickness);
@@ -318,6 +318,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Line " + std::to_string(lineCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -326,6 +327,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Quad " + std::to_string(quadCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -334,6 +336,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Circle " + std::to_string(circleCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -342,6 +345,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Triangle " + std::to_string(triangleCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -350,6 +354,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Polygon " + std::to_string(polygonCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -358,6 +363,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Pencil " + std::to_string(pencilCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}

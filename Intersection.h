@@ -4,7 +4,7 @@
 #include "Line.h"
 
 
-#define TOLERANCEL 0.00001
+#define TOLERANCEL 0.000001
 
 class Intersection
 {
@@ -17,7 +17,7 @@ private:
 	bool isPointOnLineSegment(const Geometry::Point& point, const Geometry::Line& lineSegment);
 
 public:
-	std::vector<Geometry::Point*> getLineIntersectionPoints(const std::vector<Geometry::Line*>& lines);
+	std::vector<Geometry::Point*> getLineIntersectionPoints(const std::vector<Geometry::IGeometry*>& lines);
 
 private:
 	int intersectionCounter;

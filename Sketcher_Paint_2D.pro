@@ -18,12 +18,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     GLWidget.cpp \
-    treewidget.cpp
+    treewidget.cpp \
+    Intersection.cpp
 
 HEADERS += \
     mainwindow.h \
     GLWidget.h \
-    treewidget.h
+    treewidget.h \
+    Intersection.h
 
 FORMS += \
     mainwindow.ui \
