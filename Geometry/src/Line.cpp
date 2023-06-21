@@ -2,15 +2,16 @@
 #include "Line.h"
 #include "Line.h"
 
+using namespace Geometry;
 
-Line::Line():IGeometry("Line")
+Line::Line():IGeometry(LineType)
 {
 }
 
 Line::Line(const Point& _endpoint1, const Point& _endpoint2):
 	endpoint1(_endpoint1),endpoint2(_endpoint2)
 {
-	name = "Line";
+	type = LineType;
 }
 
 void Line::input()
@@ -34,7 +35,7 @@ void Line::display()
 std::string Line::toString()
 {
 	std::stringstream returnStr;
-	returnStr << name << " : ("
+	returnStr << geometryNames[type] << " : ("
 		<< this->endpoint1.getX() << ", "
 		<< this->endpoint1.getY() << ", "
 		<< this->endpoint1.getZ() << "), ("
@@ -48,7 +49,7 @@ void Line::generateLine()
 {
 }
 
-Point Line::getEndPoint()
+Point Line::getEndPoint() const
 {
 	return endpoint1;
 }
@@ -63,7 +64,7 @@ void Line::setEndPoint(Point end)
 	endpoint2 = end;
 }
 
-Point Line::getStartpoint()
+Point Line::getStartPoint() const
 {
 	return endpoint2;
 }

@@ -19,6 +19,7 @@
 #include "Circle.h"
 #include "Triangle.h"
 #include "Quad.h"
+#include "Polygon.h"
 
 class MainWindow;
 
@@ -33,6 +34,7 @@ static const char* vertexShaderSource =
 "out vec4 color_out;\n"
 "void main()\n"
 "{\n"
+"	 gl_PointSize = 7;\n"
 "    gl_Position = vec4(position, 1.0);\n"
 "    color_out = vec4(color, 1.0);\n"
 "}";
@@ -57,7 +59,7 @@ public:
 
 	void initializeGL() override;
 	void paintGL() override;
-	void addGeom(IGeometry* geometry);
+	void addGeom(Geometry::IGeometry* geometry);
 	/**
 	 * @brief Set current Drawing Mode
 	 * @param mode geometry type
@@ -67,15 +69,10 @@ public:
 	 * @brief Set current Color mode
 	 * @param color geometry color
 	*/
-	void setColorMode(Color color);
-	void drawGeom(IGeometry* geom);
+	void setColorMode(Geometry::Color color);
+	void drawGeom(Geometry::IGeometry* geom);
 
 private:
-	/**
-	 * @brief 
-	 * @return Returns the list of available IGeometries 
-	*/
-	std::vector<IGeometry*> getGeomList();
 	/**
 	 * @brief Utility function to list Geometry ID to QTreeWidget
 	*/
@@ -89,20 +86,20 @@ private:
 	 * @param vect target std::vector<float>
 	 * @param point	
 	*/
-	void addPointToVector(std::vector<float>& vect, const Point& point);
+	void addPointToVector(std::vector<float>& vect, const Geometry::Point& point);
 	/**
 	 * @brief Utility function to add Color to std::Vector<float>
 	 * @param vect target std::vector<float>
 	 * @param color 
 	*/
-	void addColorToVector(std::vector<float>& vect, const Color& color);
+	void addColorToVector(std::vector<float>& vect, const Geometry::Color& color);
 
 
 protected:
 	void resizeEvent(QResizeEvent* event) override;
 
 signals:
-	void geometryDrawn(std::unordered_map<std::string, IGeometry*> geomMap);
+	void geometryDrawn(std::unordered_map<std::string, Geometry::IGeometry*> geomMap);
 
 private slots:
 	void mousePressEvent(QMouseEvent* event);
@@ -111,9 +108,8 @@ private slots:
 
 
 private:
-	IGeometry* geom;
-	std::vector<IGeometry*> mGeometry;
-	Color m_shapeColor;
+	Geometry::IGeometry* geom;
+	Geometry::Color m_shapeColor;
 	DrawingMode currentMode;
 	int lineCounter;
 	int quadCounter;
@@ -121,6 +117,7 @@ private:
 	int triangleCounter;
 	int polygonCounter;
 	int pencilCounter;
+	std::vector<Geometry::Point*> mPolygonVertices;
 
 	//*******************************
 	GLuint m_posAttr;
@@ -129,12 +126,13 @@ private:
 	GLuint m_Vbo,m_Vbo_Col;
 	QOpenGLVertexArrayObject m_Vao;
 	std::unordered_map<std::string ,std::vector<float>> mGeometryData;
-	std::unordered_map<std::string, IGeometry*> geomMap;
+	std::unordered_map<std::string, Geometry::IGeometry*> geomMap;
 	//*******************************
 
 public:
-	Point* startPoint;
-	Point* endPoint;
+	Geometry::Point* startPoint;
+	Geometry::Point* endPoint;
+
 	QTreeWidget* tree;
 	QTreeWidgetItem* itemLine;
 	QTreeWidgetItem* itemQuad;

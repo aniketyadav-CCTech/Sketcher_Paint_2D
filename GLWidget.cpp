@@ -3,19 +3,20 @@
 #include <QScreen>
 #include <algorithm>
 #include <unordered_map>
+#include <treewidget.h>
 
 
 GLWidget::GLWidget(QWidget* parent)
 	: QOpenGLWidget(parent),
-	startPoint(nullptr),
-	endPoint(nullptr),
+	currentMode(LineMode),
 	lineCounter(0),
 	quadCounter(0),
 	circleCounter(0),
 	triangleCounter(0),
 	polygonCounter(0),
 	pencilCounter(0),
-	currentMode(LineMode)
+	startPoint(nullptr),
+	endPoint(nullptr)
 {
 	tree = parent->findChild<QTreeWidget*>("treeWidget");
 	addTopLevelItems();
@@ -29,24 +30,26 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
 		float y = static_cast<float>(height() - mousePos.y());
 		float glX = (x / static_cast<float>(width())) * 2.0f - 1.0f;
 		float glY = (y / static_cast<float>(height())) * 2.0f - 1.0f;
-		startPoint = new Point(glX, glY, 0);
+		startPoint = new Geometry::Point(glX, glY, 0);
 		switch (currentMode)
 		{
 		case LineMode:
-			geom = new Line();
+			geom = new Geometry::Line();
 			break;
 		case QuadMode:
-			geom = new Quad();
+			geom = new Geometry::Quad();
 			break;
 		case CircleMode:
-			geom = new Circle();
+			geom = new Geometry::Circle();
 			break;
 		case TriangleMode:
-			geom = new Triangle();
+			geom = new Geometry::Triangle();
 			break;
 		case PolygonMode:
+			geom = new Geometry::Polygon();
 			break;
 		case PencilMode:
+			geom = new Geometry::Point();
 			break;
 		default:
 			break;
@@ -59,19 +62,18 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (event->button() == Qt::LeftButton) {
 
-		QPoint mousePos = event->pos();
-		float glX = (2.0f * event->x() / width()) - 1.0f;
-		float glY = 1.0f - (2.0f * event->y() / height());
-		endPoint = new Point(glX, glY, 0);
+		float glX = (2.0f * event->position().x() / width()) - 1.0f;
+		float glY = 1.0f - (2.0f * event->position().y() / height());
+		endPoint = new Geometry::Point(glX, glY, 0);
 		switch (currentMode)
 		{
 		case LineMode:
 		{
-			Line* line = static_cast<Line*>(geom);
+			Geometry::Line* line = dynamic_cast<Geometry::Line*>(geom);
 			line->setStartPoint(*startPoint);
 			line->setEndPoint(*endPoint);
 			line->setColor(m_shapeColor);
-			addPointToVector(line->geomData, line->getStartpoint());
+			addPointToVector(line->geomData, line->getStartPoint());
 			addColorToVector(line->geomData, line->getColor());
 			addPointToVector(line->geomData, line->getEndPoint());
 			addColorToVector(line->geomData, line->getColor());
@@ -83,7 +85,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 		}
 		case QuadMode:
 		{
-			Quad* quad = static_cast<Quad*>(geom);
+			Geometry::Quad* quad = dynamic_cast<Geometry::Quad*>(geom);
 			quad->setStartPoint(*startPoint);
 			quad->setEndPoint(*endPoint);
 			quad->setColor(m_shapeColor);
@@ -103,7 +105,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 		}
 		case CircleMode:
 		{
-			Circle* circle = static_cast<Circle*>(geom);
+			Geometry::Circle* circle = dynamic_cast<Geometry::Circle*>(geom);
 			circle->mCenterPoint = (*startPoint);
 			float deltaX = startPoint->getX() - endPoint->getX();
 			float deltaY = startPoint->getY() - endPoint->getY();
@@ -112,10 +114,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 			const int num_segments = 30;
 			for (int i = 0; i < num_segments; i++) {
 				float theta = 2.0f * M_PI * float(i) / float(num_segments);
-				Point p;
-				p.setX(circle->getRadius() * cosf(theta) + circle->mCenterPoint.getX());
-				p.setY(circle->getRadius() * sinf(theta) + circle->mCenterPoint.getY());
-				addPointToVector(circle->geomData, p);
+				Geometry::Point* p = new Geometry::Point();
+				p->setX(circle->getRadius() * cosf(theta) + circle->mCenterPoint.getX());
+				p->setY(circle->getRadius() * sinf(theta) + circle->mCenterPoint.getY());
+				addPointToVector(circle->geomData, *p);
 				addColorToVector(circle->geomData, circle->getColor());
 			}
 			circleCounter++;
@@ -126,11 +128,11 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 		}
 		case TriangleMode:
 		{
-			Triangle* triangle = static_cast<Triangle*>(geom);
+			Geometry::Triangle* triangle = dynamic_cast<Geometry::Triangle*>(geom);
 			triangle->setStartPoint(*startPoint);
 			triangle->setEndPoint(*endPoint);
 			triangle->setColor(m_shapeColor);
-			std::array<Point, 3> vertArray;
+			std::array<Geometry::Point, 3> vertArray;
 			triangle->getTriangle(vertArray);
 			for (auto point : vertArray) {
 				addPointToVector(triangle->geomData, point);
@@ -144,14 +146,41 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 		}
 		case PolygonMode:
 		{
+			Geometry::Polygon* polygon = dynamic_cast<Geometry::Polygon*>(geom);
+			polygon->setCenterPoint(startPoint);
+			float deltaX = startPoint->getX() - endPoint->getX();
+			float deltaY = startPoint->getY() - endPoint->getY();
+			float distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
+			polygon->setCenterToVertexDistance(distance);
+			const int num_segments = 5;
+			for (int i = 0; i < num_segments; i++) {
+				float theta = 2.0f * M_PI * float(i) / float(num_segments);
+				Geometry::Point* p = new Geometry::Point();
+				p->setX(distance * cosf(theta) + startPoint->getX());
+				p->setY(distance * sinf(theta) + startPoint->getY());
+				polygon->addVertex(p);
+				addPointToVector(polygon->geomData, *p);
+				addColorToVector(polygon->geomData, polygon->getColor());
+			}
 			polygonCounter++;
 			addGeomToTree();
+			mGeometryData[polygon->geomID] = polygon->geomData;
+			addGeom(geom);
 			break;
 		}
 		case PencilMode:
 		{
+			Geometry::Point* point = dynamic_cast<Geometry::Point*>(geom);
+			point->setX(endPoint->getX());
+			point->setY(endPoint->getY());
+			point->setZ(0);
+			point->setColor(m_shapeColor);
+			addPointToVector(point->geomData, *point);
+			addColorToVector(point->geomData, point->getColor());
 			pencilCounter++;
 			addGeomToTree();
+			mGeometryData[point->geomID] = point->geomData;
+			addGeom(geom);
 			break;
 		}
 		default:
@@ -165,14 +194,14 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 	QOpenGLWidget::mousePressEvent(event);
 }
 
-void GLWidget::addPointToVector(std::vector<float>& vect, const Point& point)
+void GLWidget::addPointToVector(std::vector<float>& vect, const Geometry::Point& point)
 {
 	vect.push_back(point.getX());
 	vect.push_back(point.getY());
 	vect.push_back(point.getZ());
 }
 
-void GLWidget::addColorToVector(std::vector<float>& vect, const Color& color)
+void GLWidget::addColorToVector(std::vector<float>& vect, const Geometry::Color& color)
 {
 	vect.push_back(color.r);
 	vect.push_back(color.g);
@@ -216,7 +245,8 @@ void GLWidget::initializeGL()
 	m_Vao.create();
 	m_Vao.bind();
 	m_Vao.release();
-	glLineWidth(REGULAR);
+	glLineWidth(Geometry::REGULAR);
+	glEnable(GL_PROGRAM_POINT_SIZE);
 }
 
 void GLWidget::paintGL()
@@ -226,7 +256,7 @@ void GLWidget::paintGL()
 
 	for (auto geomItem : mGeometryData)
 	{
-		IGeometry* geometry = geomMap[geomItem.first];
+		Geometry::IGeometry* geometry = geomMap[geomItem.first];
 		std::vector<float> geometryData = geomItem.second;
 
 		QOpenGLVertexArrayObject::Binder vaoBinder(&m_Vao);
@@ -240,26 +270,34 @@ void GLWidget::paintGL()
 		glBufferData(GL_ARRAY_BUFFER, geometryData.size() * sizeof(float), geometryData.data(), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
-		glLineWidth(geometry->thickness);
-		glDrawArrays(GL_LINE_LOOP, 0, GLsizei(geometryData.size() / 6));
-		glLineWidth(REGULAR);
+
+		if (geometry->type == Geometry::PointType)
+		{
+			glDrawArrays(GL_POINTS, 0, GLsizei(geometryData.size() / 6));
+		}
+		else {
+			glLineWidth(geometry->thickness);
+			glDrawArrays(GL_LINE_LOOP, 0, GLsizei(geometryData.size() / 6));
+			glLineWidth(Geometry::REGULAR);
+		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	update();
 
 }
 
-void GLWidget::addGeom(IGeometry* geometry)
+void GLWidget::addGeom(Geometry::IGeometry* geometry)
 {
-	mGeometry.push_back(geometry);
+	mGeometryData[geometry->geomID] = geometry->geomData;
+	geomMap[geometry->geomID] = geometry;
 }
 
-void GLWidget::setColorMode(Color color)
+void GLWidget::setColorMode(Geometry::Color color)
 {
 	m_shapeColor = color;
 }
 
-void GLWidget::drawGeom(IGeometry* geom)
+void GLWidget::drawGeom(Geometry::IGeometry* geom)
 {
 	this->geom = geom;
 }
@@ -267,11 +305,6 @@ void GLWidget::drawGeom(IGeometry* geom)
 void GLWidget::setDrawingMode(DrawingMode mode)
 {
 	currentMode = mode;
-}
-
-std::vector<IGeometry*> GLWidget::getGeomList()
-{
-	return mGeometry;
 }
 
 void GLWidget::addGeomToTree()
@@ -285,6 +318,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Line " + std::to_string(lineCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -293,6 +327,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Quad " + std::to_string(quadCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -301,6 +336,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Circle " + std::to_string(circleCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -309,6 +345,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Triangle " + std::to_string(triangleCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -317,6 +354,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Polygon " + std::to_string(polygonCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}
@@ -325,6 +363,7 @@ void GLWidget::addGeomToTree()
 		QTreeWidgetItem* child = new QTreeWidgetItem();
 		text = "Pencil " + std::to_string(pencilCounter);
 		child->setText(0, text.c_str());
+		child->setToolTip(0, geom->toString().c_str());
 		item->addChild(child);
 		break;
 	}

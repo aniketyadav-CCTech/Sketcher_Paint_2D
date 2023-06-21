@@ -1,5 +1,7 @@
 #include "IGeometry.h"
 
+using namespace Geometry;
+
 void IGeometry::setColor(float r, float g, float b)
 {
 	color.r = r;

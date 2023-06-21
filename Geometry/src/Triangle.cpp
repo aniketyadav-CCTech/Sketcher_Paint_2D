@@ -1,14 +1,16 @@
 #include "Triangle.h"
 
+using namespace Geometry;
+
 #define M_PI 3.14159
 
-Triangle::Triangle() :IGeometry("Triangle")
+Triangle::Triangle() :IGeometry(TriangleType)
 {
 }
 
 Triangle::Triangle(Point p1, Point p2, Point p3)
 {
-	name = "Triangle";
+	type = TriangleType;
 	mP1 = p1;
 	mP2 = p2;
 	mP3 = p3;
@@ -40,7 +42,7 @@ void Triangle::display()
 std::string Triangle::toString()
 {
 	std::stringstream returnStr;
-	returnStr << name << " : ("
+	returnStr << geometryNames[type] << " : ("
 		<< this->mP1.getX() << ", "
 		<< this->mP1.getY() << ", "
 		<< this->mP1.getZ() << "), ("
@@ -96,4 +98,9 @@ void Triangle::setEndPoint(Point end)
 
 	mP2.setX(centerPoint.getX() + sideLength * cos(angle1));
 	mP2.setY(centerPoint.getY() + sideLength * sin(angle1));
+}
+
+std::vector<Geometry::Line*> Geometry::Triangle::getEdgeList()
+{
+	return std::vector<Geometry::Line*> {new Line(mP1, mP2), new Line(mP1, mP3), new Line(mP3, mP2)};
 }

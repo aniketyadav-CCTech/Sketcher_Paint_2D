@@ -14,13 +14,11 @@
 #include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGroupBox>
-#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -49,7 +47,6 @@ public:
     QPushButton *cyanColor;
     QPushButton *redColor;
     QPushButton *blueColor;
-    QTreeWidget *treeWidget;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -60,7 +57,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1039, 643);
+        MainWindow->resize(1039, 641);
         MainWindow->setStyleSheet(QString::fromUtf8(""));
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName("actionOpen");
@@ -98,7 +95,8 @@ public:
         geometrySelection = new QGroupBox(centralwidget);
         geometrySelection->setObjectName("geometrySelection");
         geometrySelection->setGeometry(QRect(10, 10, 201, 51));
-        geometrySelection->setStyleSheet(QString::fromUtf8("background-color: white;"));
+        geometrySelection->setStyleSheet(QString::fromUtf8("background-color: white;\n"
+"border-color: rgb(255, 0, 0);"));
         circleButton = new QPushButton(geometrySelection);
         circleButton->setObjectName("circleButton");
         circleButton->setGeometry(QRect(70, 10, 30, 30));
@@ -143,7 +141,7 @@ public:
         rectangleButton->setIcon(icon11);
         colorButtons = new QGroupBox(centralwidget);
         colorButtons->setObjectName("colorButtons");
-        colorButtons->setGeometry(QRect(220, 10, 211, 51));
+        colorButtons->setGeometry(QRect(820, 10, 211, 51));
         colorButtons->setStyleSheet(QString::fromUtf8("background-color: white;"));
         greenColor = new QPushButton(colorButtons);
         greenColor->setObjectName("greenColor");
@@ -175,13 +173,6 @@ public:
         blueColor->setGeometry(QRect(42, 10, 30, 30));
         blueColor->setStyleSheet(QString::fromUtf8("border: none;\n"
 "background-color: rgb(0, 0, 255);"));
-        treeWidget = new QTreeWidget(centralwidget);
-        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
-        __qtreewidgetitem->setText(0, QString::fromUtf8("1"));
-        treeWidget->setHeaderItem(__qtreewidgetitem);
-        treeWidget->setObjectName("treeWidget");
-        treeWidget->setGeometry(QRect(10, 70, 201, 521));
-        treeWidget->setSelectionMode(QAbstractItemView::MultiSelection);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");

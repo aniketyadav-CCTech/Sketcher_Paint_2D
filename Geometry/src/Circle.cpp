@@ -1,17 +1,20 @@
 #include "Circle.h"
 #include "Circle.h"
+#include "Circle.h"
 #include <sstream>
+
+using namespace Geometry;
 
 #define M_PI 3.14159
 
-Circle::Circle() :IGeometry("Circle"), mCenterPoint(0, 0, 0), mRadius(0)
+Circle::Circle() :IGeometry(CircleType), mCenterPoint(0, 0, 0), mRadius(0)
 {
 }
 
-Circle::Circle(Point centerPoint, float radius):
-	mCenterPoint(centerPoint),mRadius(radius)
+Circle::Circle(Point centerPoint, float radius) :
+	mCenterPoint(centerPoint), mRadius(radius)
 {
-	this->name = "Circle";
+	this->type = CircleType;
 }
 
 void Circle::input()
@@ -39,7 +42,7 @@ void Circle::display()
 std::string Circle::toString()
 {
 	std::stringstream ss;
-	ss << name << " : ("
+	ss << geometryNames[type] << " : ("
 		<< this->mCenterPoint.getX() << ", "
 		<< this->mCenterPoint.getY() << ", "
 		<< this->mCenterPoint.getZ() << "), Radius : "
@@ -47,3 +50,26 @@ std::string Circle::toString()
 	return ss.str();
 }
 
+void Circle::addPoint(Point* point)
+{
+	pointsOnCircumferance.push_back(point);
+	if (pointsOnCircumferance.size() > 1)
+	{
+		linesOnCircumferance.clear();
+		for (size_t i = 0; i < pointsOnCircumferance.size() - 1; ++i) {
+			Line* line = new Line;
+			line->setStartPoint(*pointsOnCircumferance[i]);
+			line->setEndPoint(*pointsOnCircumferance[i + 1]);
+			linesOnCircumferance.push_back(line);
+		}
+		Line* line = new Line;
+		line->setStartPoint(*pointsOnCircumferance.back());
+		line->setEndPoint(*pointsOnCircumferance.front());
+		linesOnCircumferance.push_back(line);
+	}
+}
+
+std::vector<Line*> Geometry::Circle::getLines()
+{
+	return linesOnCircumferance;
+}

@@ -3,23 +3,28 @@
 #include "Point.h"
 #include <sstream>
 #include <array>
+#include "Line.h"
 
-class DllExport Triangle final : public IGeometry
+namespace Geometry
 {
-public:
-    Triangle();
-    Triangle(Point p1, Point p2, Point p3);
-    Triangle(Point centerPoint, Point endPoint);
-    std::string toString() override;
-    void input() override;
-    void display() override;
-    void getTriangle(std::array<Point, 3>& arr);
-    Point getStartpoint();
-    Point getEndpoint();
-    void setStartPoint(Point start);
-    void setEndPoint(Point end);
+	class DllExport Triangle final : public IGeometry
+	{
+	public:
+		Triangle();
+		Triangle(Point p1, Point p2, Point p3);
+		Triangle(Point centerPoint, Point endPoint);
+		std::string toString() override;
+		void input() override;
+		void display() override;
+		void getTriangle(std::array<Point, 3>& arr);
+		Point getStartpoint();
+		Point getEndpoint();
+		void setStartPoint(Point start);
+		void setEndPoint(Point end);
+		std::vector<Geometry::Line*> getEdgeList();
 
-private:
-    Point centerPoint;
-    Point mP1, mP2, mP3;
-};
+	private:
+		Point centerPoint;
+		Point mP1, mP2, mP3;
+	};
+}
