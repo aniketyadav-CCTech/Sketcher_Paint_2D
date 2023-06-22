@@ -3,6 +3,7 @@
 #include "Point.h"
 #include "Line.h"
 #include <QDebug>
+#include <set>
 
 
 #define TOLERANCEL 0.000001
@@ -21,8 +22,10 @@ private:
 	bool isEndPoint(const Geometry::Line& line, const Geometry::Point* point);
 
 public:
-	std::vector<Geometry::Point*> getLineIntersectionPoints(const std::vector<Geometry::IGeometry*>& lines);
+	std::vector<Geometry::Point*> getLineIntersectionPoints(const std::unordered_map<std::string, std::vector<Geometry::Line*>>& lines);
+	std::vector<Geometry::Point*> intersectionPointsInLine(Geometry::Line* line);
 
 private:
 	int intersectionCounter;
+	std::set<Geometry::Point*> m_IntersectionPoints;
 };

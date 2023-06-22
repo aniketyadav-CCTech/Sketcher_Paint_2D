@@ -60,6 +60,7 @@ public:
 	void initializeGL() override;
 	void paintGL() override;
 	void addGeom(Geometry::IGeometry* geometry);
+	void removeGeom(Geometry::IGeometry* geometry);
 	/**
 	 * @brief Set current Drawing Mode
 	 * @param mode geometry type

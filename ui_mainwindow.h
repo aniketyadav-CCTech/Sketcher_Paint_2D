@@ -120,6 +120,7 @@ public:
         polygonButton->setIcon(icon8);
         pencilButton = new QPushButton(geometrySelection);
         pencilButton->setObjectName("pencilButton");
+        pencilButton->setEnabled(false);
         pencilButton->setGeometry(QRect(160, 10, 30, 30));
         pencilButton->setStyleSheet(QString::fromUtf8("border: none;"));
         QIcon icon9;
@@ -216,6 +217,9 @@ public:
         circleButton->setText(QString());
         triangleButton->setText(QString());
         polygonButton->setText(QString());
+#if QT_CONFIG(tooltip)
+        pencilButton->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>Pencil Mode is not Implemented yet</p></body></html>", nullptr));
+#endif // QT_CONFIG(tooltip)
         pencilButton->setText(QString());
         lineButton->setText(QString());
         rectangleButton->setText(QString());

@@ -40,7 +40,7 @@ void MainWindow::geometryDrawn(std::unordered_map<std::string, Geometry::IGeomet
 void MainWindow::changeEvent(QEvent* event)
 {
 	if (event->type() == QEvent::WindowStateChange) {
-		QSize windowSize = size(); 
+		QSize windowSize = size();
 		glWidget->setGeometry(QRect(220, 70, 1300, 1300));
 		QGroupBox* colorButtonBox = centralWidget()->findChild<QGroupBox*>("colorButtons");
 		colorButtonBox->setGeometry(QRect(centralWidget()->width() - 221, 10, 211, 51));
@@ -131,64 +131,73 @@ void MainWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int colu
 	if (treeWidget->selectedItems().size() != 0)
 		if (item->parent())
 		{
-			std::vector<Geometry::IGeometry*> lineList;
+
+			lineMap.clear();
 			for (auto item : treeWidget->selectedItems())
 			{
 				if (item->parent()) {
 					Geometry::IGeometry* geom = geomMap[item->text(column).toStdString()];
-					switch (geom->type) {
-					case Geometry::LineType:
-					{
-						lineList.push_back(dynamic_cast<Geometry::Line*>(geom));
-						break;
-					}
-					case Geometry::QuadType:
-					{
-						Geometry::Quad* quad = dynamic_cast<Geometry::Quad*>(geom);
-						for (auto line : quad->getEdgeList())
-							lineList.push_back(line);
-						break;
-					}
-					break;
-					case Geometry::CircleType:
-					{
-						Geometry::Circle* circle = dynamic_cast<Geometry::Circle*>(geom);
-						for (auto line : circle->getLines())
-							lineList.push_back(line);
-						break;
-					}
-					case Geometry::TriangleType:
-					{
-						Geometry::Triangle* triangle = dynamic_cast<Geometry::Triangle*>(geom);
-						for (auto line : triangle->getEdgeList())
-							lineList.push_back(line);
-						break;
-					}
-					case Geometry::PolygonType:
-					{
-						Geometry::Polygon* polygon = dynamic_cast<Geometry::Polygon*>(geom);
-						for (auto line : polygon->getEdgeList())
-							lineList.push_back(line);
-						break;
-					}
-					case Geometry::PointType:
-						break;
-					default:
-						break;
-					}
+					lineMap[geom->geomID] = getLinesInGeometry(geom);
 				}
 			}
-			std::vector<Geometry::Point*> intersectionPoints = intersection->getLineIntersectionPoints(lineList);
+			std::vector<Geometry::Point*> intersectionPoints = intersection->getLineIntersectionPoints(lineMap);
 			for (auto& item : intersectionPoints)
 			{
 				Geometry::IGeometry* point = item;
 				point->thickness = Geometry::REGULAR;
 				point->setColor(colorMode);
 				glWidget->addGeom(point);
-				glWidget->paintGL();
 				glWidget->update();
 			}
 		}
+}
+
+std::vector<Geometry::Line*> MainWindow::getLinesInGeometry(Geometry::IGeometry* geom)
+{
+	std::vector<Geometry::Line*> lineList;
+	switch (geom->type) {
+	case Geometry::LineType:
+	{
+		lineList.push_back(dynamic_cast<Geometry::Line*>(geom));
+		std::vector<Geometry::Line*> list;
+		list.push_back(dynamic_cast<Geometry::Line*>(geom));
+		break;
+	}
+	case Geometry::QuadType:
+	{
+		Geometry::Quad* quad = dynamic_cast<Geometry::Quad*>(geom);
+		for (auto line : quad->getEdgeList())
+			lineList.push_back(line);
+		break;
+	}
+	break;
+	case Geometry::CircleType:
+	{
+		Geometry::Circle* circle = dynamic_cast<Geometry::Circle*>(geom);
+		for (auto line : circle->getLines())
+			lineList.push_back(line);
+		break;
+	}
+	case Geometry::TriangleType:
+	{
+		Geometry::Triangle* triangle = dynamic_cast<Geometry::Triangle*>(geom);
+		for (auto line : triangle->getEdgeList())
+			lineList.push_back(line);
+		break;
+	}
+	case Geometry::PolygonType:
+	{
+		Geometry::Polygon* polygon = dynamic_cast<Geometry::Polygon*>(geom);
+		for (auto line : polygon->getEdgeList())
+			lineList.push_back(line);
+		break;
+	}
+	case Geometry::PointType:
+		break;
+	default:
+		break;
+	}
+	return lineList;
 }
 
 void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
@@ -196,7 +205,20 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
 	if (item->parent())
 	{
 		Geometry::IGeometry* geom = geomMap[item->text(0).toStdString()];
-		geom->thickness = (treeWidget->selectedItems().contains(item)) ? Geometry::BOLD : Geometry::REGULAR;
+		if (treeWidget->selectedItems().contains(item))
+			geom->thickness = Geometry::BOLD;
+		else
+		{
+			for (auto line : getLinesInGeometry(geom))
+				for (auto point : intersection->intersectionPointsInLine(line))
+				{
+					lineMap.erase(point->geomID);
+					glWidget->removeGeom(point);
+				}
+			geom->thickness = Geometry::REGULAR;
+			glWidget->paintGL();
+			glWidget->update();
+		}
 		glWidget->paintGL();
 	}
 }

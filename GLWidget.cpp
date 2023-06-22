@@ -293,6 +293,12 @@ void GLWidget::addGeom(Geometry::IGeometry* geometry)
 	geomMap[geometry->geomID] = geometry;
 }
 
+void GLWidget::removeGeom(Geometry::IGeometry* geometry)
+{
+	mGeometryData.erase(geometry->geomID);
+	geomMap.erase(geometry->geomID);
+}
+
 void GLWidget::setColorMode(Geometry::Color color)
 {
 	m_shapeColor = color;

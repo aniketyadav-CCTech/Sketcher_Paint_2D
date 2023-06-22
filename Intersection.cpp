@@ -61,17 +61,38 @@ bool Intersection::intersection(const Geometry::Line& line1, const Geometry::Lin
 	return false;
 }
 
-std::vector<Geometry::Point*> Intersection::getLineIntersectionPoints(const std::vector<Geometry::IGeometry*>& lines)
+std::vector<Geometry::Point*> Intersection::intersectionPointsInLine(Geometry::Line* line)
+{
+	std::vector<Geometry::Point*> points;
+	for (auto point : m_IntersectionPoints)
+		if(isPointOnLineSegment(*point, *line))
+			points.push_back(point);
+	return points;
+}
+
+bool Intersection::isEndPoint(const Geometry::Line& line, const Geometry::Point* point)
+{
+	if (line.getStartPoint().isEqual(*point) || line.getEndPoint().isEqual(*point))
+		return true;
+}
+
+std::vector<Geometry::Point*> Intersection::getLineIntersectionPoints(const std::unordered_map<std::string, std::vector<Geometry::Line*>>& map)
 {
 	std::vector<Geometry::Point*> intersectionPoints;
+	
+	std::vector<Geometry::Line*> lines;
+	for (auto geomList : map)
+		for (auto line : geomList.second)
+			lines.push_back(line);
 	for (size_t i = 0; i < lines.size() - 1; i++) {
 		for (size_t j = i + 1; j < lines.size(); j++) {
 			Geometry::Point* intersectionP = new Geometry::Point();
-			intersectionP->geomID = "Intersection " + std::to_string(++intersectionCounter);
+			intersectionP->geomID = "Point " + std::to_string(++intersectionCounter);
 			if (intersection(*dynamic_cast<Geometry::Line*>(lines[i]), *dynamic_cast<Geometry::Line*>(lines[j]), *intersectionP))
 			{
 				intersectionP->setGeomData();
 				intersectionPoints.push_back(intersectionP);
+				m_IntersectionPoints.insert(intersectionP);
 			}
 		}
 	}
@@ -89,11 +110,4 @@ bool Intersection::isPointOnLineSegment(const Geometry::Point& point, const Geom
 		&& isLessThanOrEqualToF(point.getX(), maxX)
 		&& isGreaterThanOrEqualToF(point.getY(), minY)
 		&& isLessThanOrEqualToF(point.getY(), maxY);
-}
-
-bool Intersection::isEndPoint(const Geometry::Line& line, const Geometry::Point* point)
-{
-	if (line.getStartPoint().isEqual(*point) || line.getEndPoint().isEqual(*point))
-		return true;
-
 }

@@ -43,8 +43,12 @@ private slots:
 	void on_treeWidget_itemClicked(QTreeWidgetItem* item, int column);
 	void on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column);
 
+
 public slots:
 	void geometryDrawn(std::unordered_map<std::string, Geometry::IGeometry*> geomMap);
+
+private:
+	std::vector<Geometry::Line*> getLinesInGeometry(Geometry::IGeometry* geom);
 
 protected:
 	void changeEvent(QEvent* event);
@@ -57,5 +61,7 @@ public:
 	Intersection* intersection;
 	GLWidget* glWidget;
 
+private:
+	std::unordered_map<std::string, std::vector<Geometry::Line*>> lineMap;
 };
 #endif // MAINWINDOW_H
