@@ -1,5 +1,4 @@
 #include "Point.h"
-#include "Point.h"
 #include <sstream>
 
 using namespace Geometry;
@@ -63,3 +62,12 @@ std::istream& Geometry::operator>>(std::istream& is, Point& point) {
     return is;
 }
 
+bool Point::isEqualF(float x, float y) const
+{
+    return fabs(x - y) < TOLERANCEL;
+}
+
+bool Point::isEqual(const Point& other) const
+{
+    return isEqualF(x, other.x) && isEqualF(y, other.y) && isEqualF(z, other.z);
+}

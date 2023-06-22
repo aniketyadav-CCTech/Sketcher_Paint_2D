@@ -9,6 +9,16 @@ bool Intersection::isEqualF(float x, float y)
 	return fabs(x - y) < TOLERANCEL;
 }
 
+bool Intersection::isLessThanOrEqualToF(float x, float y)
+{
+	return (x - y) <= TOLERANCEL;
+}
+
+bool Intersection::isGreaterThanOrEqualToF(float x, float y)
+{
+	return (x - y) >= -TOLERANCEL;
+}
+
 bool Intersection::intersection(const Geometry::Line& line1, const Geometry::Line& line2, Geometry::Point& intersectionPoint)
 {
 	Geometry::Point p1 = line1.getStartPoint();
@@ -36,12 +46,14 @@ bool Intersection::intersection(const Geometry::Line& line1, const Geometry::Lin
 
 	float numeratorX = ((x1 * y2) - y1 * x2) * (x3 - x4) - ((x1 - x2) * ((x3 * y4) - (y3 * x4)));
 	float numeratorY = ((x1 * y2) - y1 * x2) * (y3 - y4) - ((y1 - y2) * ((x3 * y4) - (y3 * x4)));
-	Geometry::Point p;
-	p.setY(numeratorY / denominator);
-	p.setX(numeratorX / denominator);
+	Geometry::Point* p = new Geometry::Point();
+	p->setY(numeratorY / denominator);
+	p->setX(numeratorX / denominator);
 
-	if (isPointOnLineSegment(p, line1) &&
-		isPointOnLineSegment(p, line2)) {
+	if (isPointOnLineSegment(*p, line1) &&
+		isPointOnLineSegment(*p, line2)) {
+		if (isEndPoint(line1, p) || isEndPoint(line2, p)) // skip the endpoints of lines
+			return false;
 		intersectionPoint.setY(numeratorY / denominator);
 		intersectionPoint.setX(numeratorX / denominator);
 		return true;
@@ -65,6 +77,7 @@ std::vector<Geometry::Point*> Intersection::getLineIntersectionPoints(const std:
 	}
 	return intersectionPoints;
 }
+
 bool Intersection::isPointOnLineSegment(const Geometry::Point& point, const Geometry::Line& lineSegment)
 {
 	float minX = std::min(lineSegment.getStartPoint().getX(), lineSegment.getEndPoint().getX());
@@ -72,5 +85,15 @@ bool Intersection::isPointOnLineSegment(const Geometry::Point& point, const Geom
 	float minY = std::min(lineSegment.getStartPoint().getY(), lineSegment.getEndPoint().getY());
 	float maxY = std::max(lineSegment.getStartPoint().getY(), lineSegment.getEndPoint().getY());
 
-	return point.getX() >= minX && point.getX() <= maxX && point.getY() >= minY && point.getY() <= maxY;
+	return isGreaterThanOrEqualToF(point.getX(), minX)
+		&& isLessThanOrEqualToF(point.getX(), maxX)
+		&& isGreaterThanOrEqualToF(point.getY(), minY)
+		&& isLessThanOrEqualToF(point.getY(), maxY);
+}
+
+bool Intersection::isEndPoint(const Geometry::Line& line, const Geometry::Point* point)
+{
+	if (line.getStartPoint().isEqual(*point) || line.getEndPoint().isEqual(*point))
+		return true;
+
 }

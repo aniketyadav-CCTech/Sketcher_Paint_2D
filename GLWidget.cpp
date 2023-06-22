@@ -117,6 +117,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 				Geometry::Point* p = new Geometry::Point();
 				p->setX(circle->getRadius() * cosf(theta) + circle->mCenterPoint.getX());
 				p->setY(circle->getRadius() * sinf(theta) + circle->mCenterPoint.getY());
+				circle->addPoint(p);
 				addPointToVector(circle->geomData, *p);
 				addColorToVector(circle->geomData, circle->getColor());
 			}

@@ -5,6 +5,7 @@
 
 namespace Geometry
 {
+#define TOLERANCEL 0.000001
 	class DllExport Point final :public IGeometry
 	{
 	public:
@@ -18,9 +19,12 @@ namespace Geometry
 		float getX() const;
 		float getY() const;
 		float getZ() const;
+		bool isEqual(const Point& other) const;
 		void setX(float _x);
 		void setY(float _y);
 		void setZ(float _z);
+	private:
+		bool isEqualF(float x, float y) const;
 
 	private:
 		float x, y, z;

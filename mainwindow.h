@@ -1,12 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
+#include <unordered_map>
+
 #include <QMainWindow>
 #include <QOpenGLFunctions>
-#include "GLWidget.h"
-#include <QTreeWidget>
 #include <QStringListModel>
+#include <QTreeWidget>
+
+#include "GLWidget.h"
 #include "IGeometry.h"
-#include <unordered_map>
 #include "Intersection.h"
 
 QT_BEGIN_NAMESPACE
