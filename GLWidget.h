@@ -56,6 +56,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 
 public:
 	explicit GLWidget(QWidget* parent = nullptr);
+	~GLWidget();
 
 	void initializeGL() override;
 	void paintGL() override;
@@ -105,10 +106,12 @@ signals:
 private slots:
 	void mousePressEvent(QMouseEvent* event);
 	void mouseReleaseEvent(QMouseEvent* event);
+	void mouseMoveEvent(QMouseEvent* event);
 
 
 
 private:
+	void cleanupGeom();
 	Geometry::IGeometry* geom;
 	Geometry::Color m_shapeColor;
 	DrawingMode currentMode;
@@ -118,7 +121,6 @@ private:
 	int triangleCounter;
 	int polygonCounter;
 	int pencilCounter;
-	std::vector<Geometry::Point*> mPolygonVertices;
 
 	//*******************************
 	GLuint m_posAttr;

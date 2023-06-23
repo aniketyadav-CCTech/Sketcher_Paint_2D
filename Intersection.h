@@ -12,6 +12,7 @@ class Intersection
 {
 public:
 	Intersection();
+	~Intersection();
 	static bool isEqualF(float x, float y);
 	static bool isLessThanOrEqualToF(float x, float y);
 	static bool isGreaterThanOrEqualToF(float x, float y);
@@ -22,8 +23,9 @@ private:
 	bool isEndPoint(const Geometry::Line& line, const Geometry::Point* point);
 
 public:
-	std::vector<Geometry::Point*> getLineIntersectionPoints(const std::unordered_map<std::string, std::vector<Geometry::Line*>>& lines);
-	std::vector<Geometry::Point*> intersectionPointsInLine(Geometry::Line* line);
+	bool getLineIntersectionPoints(const std::unordered_map<std::string, std::vector<Geometry::Line*>>& map, std::vector<Geometry::Point*>& intersectionPoints);
+	bool getLineIntersectionPoints(const std::unordered_map<std::string, std::vector<Geometry::Line*>>& lines);
+	bool intersectionPointsInLine(Geometry::Line* line, std::vector<Geometry::Point*>& points);
 
 private:
 	int intersectionCounter;

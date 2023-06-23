@@ -7,6 +7,8 @@
 #include <QOpenGLFunctions>
 #include <QStringListModel>
 #include <QTreeWidget>
+#include <QFileDialog>
+#include <QScrollArea>
 
 #include "GLWidget.h"
 #include "IGeometry.h"
@@ -39,19 +41,19 @@ private slots:
 	void on_blackColor_clicked();
 	void on_yellowColor_clicked();
 	void on_cyanColor_clicked();
+	void on_cleanupButton_clicked();
 
 	void on_treeWidget_itemClicked(QTreeWidgetItem* item, int column);
 	void on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column);
-
 
 public slots:
 	void geometryDrawn(std::unordered_map<std::string, Geometry::IGeometry*> geomMap);
 
 private:
-	std::vector<Geometry::Line*> getLinesInGeometry(Geometry::IGeometry* geom);
+	bool getLinesInGeometry(Geometry::IGeometry* geom, std::vector<Geometry::Line*>& lineList);
 
 protected:
-	void changeEvent(QEvent* event);
+	void resizeEvent(QResizeEvent* event);
 
 public:
 	std::unordered_map<std::string, Geometry::IGeometry*> geomMap;

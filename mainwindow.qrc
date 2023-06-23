@@ -12,5 +12,6 @@
         <file>Resources/icons/save.png</file>
         <file>Resources/icons/triangle.png</file>
         <file>Resources/icons/undo.png</file>
+        <file>Resources/icons/dustbin.png</file>
     </qresource>
 </RCC>

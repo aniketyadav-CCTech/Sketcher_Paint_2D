@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <unordered_map>
 #include <treewidget.h>
+#include <QToolTip>
+#include <QPushButton>
 
 
 GLWidget::GLWidget(QWidget* parent)
@@ -18,8 +20,18 @@ GLWidget::GLWidget(QWidget* parent)
 	startPoint(nullptr),
 	endPoint(nullptr)
 {
+	setCursor(Qt::CrossCursor);
 	tree = parent->findChild<QTreeWidget*>("treeWidget");
 	addTopLevelItems();
+	setAttribute(Qt::WA_AlwaysShowToolTips);
+	setMouseTracking(true);
+	connect(parent->findChild<QPushButton*>("cleanupButton"), &QPushButton::pressed, this, &GLWidget::cleanupGeom);
+}
+
+GLWidget::~GLWidget()
+{
+	delete m_program;
+	delete endPoint;
 }
 
 void GLWidget::mousePressEvent(QMouseEvent* event)
@@ -192,7 +204,27 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 		emit geometryDrawn(geomMap);
 		update();
 	}
+	delete startPoint;
+	startPoint = nullptr;
 	QOpenGLWidget::mousePressEvent(event);
+}
+
+void GLWidget::mouseMoveEvent(QMouseEvent* event)
+{
+
+	QOpenGLWidget::mouseMoveEvent(event);
+	QPoint mousePos = event->pos();
+	float glX = (2.0f * event->position().x() / this->width()) - 1.0f;
+	float glY = (float)(1.0f - (2.0f * event->position().y() / this->height()));
+	if (startPoint != nullptr)
+	{
+		float deltaX = startPoint->getX() - glX;
+		float deltaY = startPoint->getY() - glY;
+		float distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
+		QToolTip::showText(event->pos(), QString("(%1 , %2)(length:%3)").arg(glX).arg(glY).arg(distance));
+	}
+	else
+		QToolTip::showText(event->pos(), QString("(%1 , %2)").arg(glX).arg(glY));
 }
 
 void GLWidget::addPointToVector(std::vector<float>& vect, const Geometry::Point& point)
@@ -252,6 +284,7 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
+	//glViewport(0, 0, 1000,1000);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	m_program->bind();
 
@@ -274,7 +307,7 @@ void GLWidget::paintGL()
 
 		if (geometry->type == Geometry::PointType)
 		{
-			glDrawArrays(GL_POINTS, 0, GLsizei(geometryData.size() / 6));
+			glDrawArrays(GL_POINTS, 0, 1);
 		}
 		else {
 			glLineWidth(geometry->thickness);
@@ -396,4 +429,18 @@ void GLWidget::addTopLevelItems()
 	itemPolygon->setText(0, std::string("Polygon").c_str());
 	itemPencil->setText(0, std::string("Pencil").c_str());
 	tree->addTopLevelItems({ itemLine, itemQuad, itemCircle, itemTriangle, itemPolygon, itemPencil });
+}
+
+void GLWidget::cleanupGeom()
+{
+	mGeometryData.clear();
+	geomMap.clear();
+	lineCounter = 0;
+	quadCounter = 0;
+	circleCounter = 0;
+	triangleCounter = 0;
+	polygonCounter = 0;
+	pencilCounter = 0;
+	tree->clear();
+	addTopLevelItems();
 }

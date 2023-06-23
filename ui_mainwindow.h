@@ -47,6 +47,7 @@ public:
     QPushButton *cyanColor;
     QPushButton *redColor;
     QPushButton *blueColor;
+    QPushButton *cleanupButton;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -57,7 +58,9 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
+        MainWindow->setWindowModality(Qt::ApplicationModal);
         MainWindow->resize(1039, 641);
+        MainWindow->setMinimumSize(QSize(520, 250));
         MainWindow->setStyleSheet(QString::fromUtf8(""));
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName("actionOpen");
@@ -94,7 +97,7 @@ public:
         centralwidget->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
         geometrySelection = new QGroupBox(centralwidget);
         geometrySelection->setObjectName("geometrySelection");
-        geometrySelection->setGeometry(QRect(10, 10, 201, 51));
+        geometrySelection->setGeometry(QRect(10, 10, 201, 50));
         geometrySelection->setStyleSheet(QString::fromUtf8("background-color: white;\n"
 "border-color: rgb(255, 0, 0);"));
         circleButton = new QPushButton(geometrySelection);
@@ -142,7 +145,7 @@ public:
         rectangleButton->setIcon(icon11);
         colorButtons = new QGroupBox(centralwidget);
         colorButtons->setObjectName("colorButtons");
-        colorButtons->setGeometry(QRect(820, 10, 211, 51));
+        colorButtons->setGeometry(QRect(820, 10, 210, 50));
         colorButtons->setStyleSheet(QString::fromUtf8("background-color: white;"));
         greenColor = new QPushButton(colorButtons);
         greenColor->setObjectName("greenColor");
@@ -174,10 +177,18 @@ public:
         blueColor->setGeometry(QRect(42, 10, 30, 30));
         blueColor->setStyleSheet(QString::fromUtf8("border: none;\n"
 "background-color: rgb(0, 0, 255);"));
+        cleanupButton = new QPushButton(centralwidget);
+        cleanupButton->setObjectName("cleanupButton");
+        cleanupButton->setGeometry(QRect(760, 20, 43, 39));
+        cleanupButton->setStyleSheet(QString::fromUtf8("border: none;"));
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/new/prefix1/Resources/icons/dustbin.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cleanupButton->setIcon(icon12);
+        cleanupButton->setIconSize(QSize(30, 30));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1039, 26));
+        menubar->setGeometry(QRect(0, 0, 1039, 22));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName("menuFile");
         menuEdit = new QMenu(menubar);
@@ -230,6 +241,7 @@ public:
         cyanColor->setText(QString());
         redColor->setText(QString());
         blueColor->setText(QString());
+        cleanupButton->setText(QString());
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuEdit->setTitle(QCoreApplication::translate("MainWindow", "Edit", nullptr));
         menuHelp->setTitle(QCoreApplication::translate("MainWindow", "Help", nullptr));

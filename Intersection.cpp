@@ -14,6 +14,12 @@ bool Intersection::isLessThanOrEqualToF(float x, float y)
 	return (x - y) <= TOLERANCEL;
 }
 
+Intersection::~Intersection()
+{
+	for (auto point : m_IntersectionPoints)
+		delete point;
+}
+
 bool Intersection::isGreaterThanOrEqualToF(float x, float y)
 {
 	return (x - y) >= -TOLERANCEL;
@@ -61,13 +67,16 @@ bool Intersection::intersection(const Geometry::Line& line1, const Geometry::Lin
 	return false;
 }
 
-std::vector<Geometry::Point*> Intersection::intersectionPointsInLine(Geometry::Line* line)
+bool Intersection::intersectionPointsInLine(Geometry::Line* line, std::vector<Geometry::Point*>& points)
 {
-	std::vector<Geometry::Point*> points;
+	bool flag = false;
 	for (auto point : m_IntersectionPoints)
-		if(isPointOnLineSegment(*point, *line))
+		if (isPointOnLineSegment(*point, *line))
+		{
 			points.push_back(point);
-	return points;
+			flag = true;
+		}
+	return flag;
 }
 
 bool Intersection::isEndPoint(const Geometry::Line& line, const Geometry::Point* point)
@@ -76,10 +85,9 @@ bool Intersection::isEndPoint(const Geometry::Line& line, const Geometry::Point*
 		return true;
 }
 
-std::vector<Geometry::Point*> Intersection::getLineIntersectionPoints(const std::unordered_map<std::string, std::vector<Geometry::Line*>>& map)
+bool Intersection::getLineIntersectionPoints(const std::unordered_map<std::string, std::vector<Geometry::Line*>>& map, std::vector<Geometry::Point*>& intersectionPoints)
 {
-	std::vector<Geometry::Point*> intersectionPoints;
-	
+	bool flag = false;
 	std::vector<Geometry::Line*> lines;
 	for (auto geomList : map)
 		for (auto line : geomList.second)
@@ -93,10 +101,12 @@ std::vector<Geometry::Point*> Intersection::getLineIntersectionPoints(const std:
 				intersectionP->setGeomData();
 				intersectionPoints.push_back(intersectionP);
 				m_IntersectionPoints.insert(intersectionP);
+				flag = true;
 			}
+			else delete intersectionP;
 		}
 	}
-	return intersectionPoints;
+	return flag;
 }
 
 bool Intersection::isPointOnLineSegment(const Geometry::Point& point, const Geometry::Line& lineSegment)
